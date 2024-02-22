@@ -2,6 +2,7 @@
 #include "Item.h"
 #include "BulletAmmo.h"
 
+unsigned BulletAmmo::amount = 30;
 // 픽업 아이템
 BulletAmmo* BulletAmmo::Create(ItemType BulletType)
 {

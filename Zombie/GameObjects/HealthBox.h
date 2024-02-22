@@ -11,9 +11,9 @@ protected:
 	HealthBox& operator=(const HealthBox&) = delete;
 	HealthBox& operator=(HealthBox&&) = delete;
 
-	unsigned amount = 40;
 
 public:
+	static unsigned amount;
 	static int healthboxCnt;
 	static HealthBox* Create(ItemType BulletType = ItemType::None);
 

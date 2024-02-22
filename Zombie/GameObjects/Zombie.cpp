@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "Zombie.h"
+#include "SceneGame.h"
 
 int Zombie::zombieCnt;
 
@@ -63,6 +64,12 @@ void Zombie::Update(float dt)
 
 	if (maxHp > 0)
 	{
+		sf::Vector2f look = player->GetPosition() - position;
+		Utils::MyMath::Normalize(look);
+
+		SetRotation(Utils::MyMath::Angle(look));
+		SetPosition(Utils::Vector2::MoveTowards(position, player->GetPosition(), speed * dt));
+
 		for (auto& b : bullets)
 		{
 			if (Utils::MyMath::Distance(position, dynamic_cast<Bullet*>(b)->GetPosition()) < 20.f)
@@ -73,25 +80,16 @@ void Zombie::Update(float dt)
 
 				if (maxHp <= 0)
 				{
-					SCENE_MANAGER.GetCurrentScene()->RemoveGameObject(this);
+					dynamic_cast<SceneGame*>(SCENE_MANAGER.GetCurrentScene())->SetDeadZombie(this);
+					speed = 0;
+					SetTexture("graphics/blood.png");
+					SetSortLayer(-1);
+					SCENE_MANAGER.GetCurrentScene()->ResortGameObject(this);
 				}
 				return;
 			}
 		}
 	}
-
-
-
-
-	sf::Vector2f look = player->GetPosition() - position;
-	Utils::MyMath::Normalize(look);
-
-	SetRotation(Utils::MyMath::Angle(look));
-	SetPosition(Utils::Vector2::MoveTowards(position, player->GetPosition(), speed * dt));
-
-
-
-
 }
 
 void Zombie::Draw(sf::RenderWindow& window)

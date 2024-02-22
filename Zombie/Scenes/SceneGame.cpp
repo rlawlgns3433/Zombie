@@ -35,7 +35,7 @@ void SceneGame::Init()
 
     for (auto spawner : itemSpawners)
     {
-        spawner->SetPosition(Utils::Random::RandomOnUnitCircle() * 200.f);
+        spawner->SetPosition(Utils::Random::RandomInUnitCircle());
         AddGameObject(spawner);
     }
 
@@ -58,6 +58,10 @@ void SceneGame::Release()
 
 void SceneGame::Reset()
 {
+    for (GameObject* obj : deadZombie)
+    {
+        RemoveGameObject(obj);
+    }
 }
 
 void SceneGame::Enter()
@@ -137,3 +141,7 @@ void SceneGame::Draw(sf::RenderWindow& window)
 	Scene::Draw(window);
 }
 
+void SceneGame::SetDeadZombie(Zombie* zombie)
+{
+    deadZombie.push_back(zombie);
+}

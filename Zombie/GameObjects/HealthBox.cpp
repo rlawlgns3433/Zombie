@@ -3,6 +3,7 @@
 #include "HealthBox.h"
 
 int HealthBox::healthboxCnt;
+unsigned HealthBox::amount = 40;
 
 HealthBox* HealthBox::Create(ItemType BulletType)
 {

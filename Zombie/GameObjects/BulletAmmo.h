@@ -15,11 +15,9 @@ protected :
 
 	Gun* gun = nullptr;
 
-	//unsigned damage = 20; bullet에서
-	unsigned amount = 0; // Gun Class 필요 Gun의 Fire() 호출 시 Bullet 생성
-	//float speed = 500.f; bullet에서
 
 public :
+	static unsigned amount; // Gun Class 필요 Gun의 Fire() 호출 시 Bullet 생성
 	static BulletAmmo* Create(ItemType BulletType = ItemType::None);
 	
 	BulletAmmo(const std::string& name = "");

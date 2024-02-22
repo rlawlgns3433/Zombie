@@ -21,10 +21,13 @@ protected :
 	
 	std::string textureId = "graphics/player.png";
 
-	float speed = 1000;
+	float speed = 500.f;
 	bool isMoving = false;
 
-
+	int cellCountX;
+	int cellCountY;
+	int cellSizeX;
+	int cellSizeY;
 
 public :
 	// protected로 변환 필요
@@ -42,4 +45,7 @@ public :
 	void Reset() override;
 	void Update(float dt) override;
 	void Draw(sf::RenderWindow& window) override;
+
+	void SetSpeed(float speed) { this->speed = speed; }
+	void AddSpeed(float addSpeed) { this->speed += addSpeed; }
 };

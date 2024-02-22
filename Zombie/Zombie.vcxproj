@@ -137,7 +137,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="GameObjects\Bullet.cpp" />
-    <ClCompile Include="BulletAmmo.cpp" />
+    <ClCompile Include="GameObjects\BulletAmmo.cpp" />
     <ClCompile Include="GameObjects\CrossHair.cpp" />
     <ClCompile Include="Framework\Framework.cpp" />
     <ClCompile Include="Framework\InputManager.cpp" />
@@ -145,9 +145,10 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="GameObjects\Gun.cpp" />
-    <ClCompile Include="HealthBox.cpp" />
-    <ClCompile Include="Item.cpp" />
-    <ClCompile Include="ItemSpawner.cpp" />
+    <ClCompile Include="GameObjects\HealthBox.cpp" />
+    <ClCompile Include="GameObjects\Item.cpp" />
+    <ClCompile Include="GameObjects\ItemSpawner.cpp" />
+    <ClCompile Include="Scenes\SceneSkillUp.cpp" />
     <ClCompile Include="Scenes\SceneTitle.cpp" />
     <ClCompile Include="GameObjects\SpriteGo.cpp" />
     <ClCompile Include="GameObjects\TextGo.cpp" />
@@ -170,7 +171,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameObjects\Bullet.h" />
-    <ClInclude Include="BulletAmmo.h" />
+    <ClInclude Include="GameObjects\BulletAmmo.h" />
     <ClInclude Include="GameObjects\CrossHair.h" />
     <ClInclude Include="Framework\Defines.h" />
     <ClInclude Include="Framework\Framework.h" />
@@ -178,9 +179,10 @@
     <ClInclude Include="Framework\pch.h" />
     <ClInclude Include="Framework\ResourceManager.h" />
     <ClInclude Include="GameObjects\Gun.h" />
-    <ClInclude Include="HealthBox.h" />
-    <ClInclude Include="Item.h" />
-    <ClInclude Include="ItemSpawner.h" />
+    <ClInclude Include="GameObjects\HealthBox.h" />
+    <ClInclude Include="GameObjects\Item.h" />
+    <ClInclude Include="GameObjects\ItemSpawner.h" />
+    <ClInclude Include="Scenes\SceneSkillUp.h" />
     <ClInclude Include="Scenes\SceneTitle.h" />
     <ClInclude Include="Framework\Singleton.h" />
     <ClInclude Include="GameObjects\SpriteGo.h" />

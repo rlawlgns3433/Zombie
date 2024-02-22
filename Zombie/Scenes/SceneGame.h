@@ -4,6 +4,7 @@
 class Player;
 class ZombieSpawner;
 class ItemSpawner;
+class Zombie;
 
 class SceneGame : public Scene
 {
@@ -12,6 +13,8 @@ protected :
 
 	std::vector<ZombieSpawner*> zombieSpawners;
 	std::vector<ItemSpawner*> itemSpawners;
+	std::vector<Zombie*> deadZombie;
+
 	Player* player = nullptr;
 
 	float windowX = 0.f;
@@ -42,5 +45,5 @@ public :
 	void Draw(sf::RenderWindow& window);
 
 	unsigned GetWave() const { return wave; }
-
+	void SetDeadZombie(Zombie* zombie);
 };

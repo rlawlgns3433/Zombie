@@ -78,22 +78,25 @@
     <ClCompile Include="GameObjects\CrossHair.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="ItemSpawner.cpp">
+    <ClCompile Include="GameObjects\ItemSpawner.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Item.cpp">
+    <ClCompile Include="GameObjects\Item.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="BulletAmmo.cpp">
+    <ClCompile Include="GameObjects\BulletAmmo.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="HealthBox.cpp">
+    <ClCompile Include="GameObjects\HealthBox.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="GameObjects\Bullet.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="GameObjects\Gun.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Scenes\SceneSkillUp.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
@@ -167,22 +170,25 @@
     <ClInclude Include="GameObjects\CrossHair.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="ItemSpawner.h">
+    <ClInclude Include="GameObjects\ItemSpawner.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Item.h">
+    <ClInclude Include="GameObjects\Item.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="BulletAmmo.h">
+    <ClInclude Include="GameObjects\BulletAmmo.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="HealthBox.h">
+    <ClInclude Include="GameObjects\HealthBox.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="GameObjects\Bullet.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="GameObjects\Gun.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Scenes\SceneSkillUp.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>

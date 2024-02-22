@@ -31,7 +31,7 @@ void ItemSpawner::Reset()
 	timer = 0.f;
 	interval = 2.f;
 	spawnCount = 1;
-	radius = 250.f;
+	radius = 300.f;
 }
 
 void ItemSpawner::Update(float dt)

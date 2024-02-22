@@ -1,6 +1,8 @@
 #include "pch.h"
 #include "SceneManager.h"
 #include "SceneGame.h"
+#include "SceneTitle.h"
+#include "SceneSkillUp.h"
 
 SceneManager::~SceneManager()
 {
@@ -12,7 +14,9 @@ void SceneManager::Init()
 	Release();
 
 	LoadAllResources();
+	scenes.push_back(new SceneTitle(SceneIDs::SceneTitle));
 	scenes.push_back(new SceneGame(SceneIDs::SceneGame));
+	scenes.push_back(new SceneSkillUp(SceneIDs::SceneSkillUp));
 
 	for (auto scene : scenes)
 	{

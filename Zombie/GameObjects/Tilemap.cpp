@@ -46,7 +46,7 @@ void Tilemap::Set(const sf::Vector2i& count, const sf::Vector2f& size)
 		{ 0, size.y }
 	};
 
-	sf::Vector2f textureCoord0[4] = // 현재는 하드코딩 -> 변경 필요 (각 타일의 크기로)
+	sf::Vector2f textureCoord0[4] =
 	{
 		{ 0, 0 },
 		{ cellSize.x, 0 },

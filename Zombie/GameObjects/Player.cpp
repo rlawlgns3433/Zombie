@@ -13,8 +13,7 @@ void Player::Init()
 	SetOrigin(Origins::MC);
 
 	gun = new Gun("gun");
-	gun->Init();
-	SCENE_MANAGER.GetCurrentScene()->AddGameObject(gun); // position 없음
+	SCENE_MANAGER.GetScene(SceneIDs::SceneGame)->AddGameObject(gun);
 
 	crossHair = dynamic_cast<CrossHair*>(SCENE_MANAGER.GetCurrentScene()->FindGameObject("crosshair"));
 }
@@ -57,15 +56,14 @@ void Player::Update(float dt)
 					GameObject* obj = SCENE_MANAGER.GetCurrentScene()->FindGameObject("zombie" + std::to_string(i));
 					if (obj != nullptr)
 					{
-						if (Utils::MyMath::Distance(position, obj->GetPosition()) < 100.f)
+						if (Utils::MyMath::Distance(position, obj->GetPosition()) < 30.f)
 						{
-							hp -= 20;
+							hp -= 20; // 좀비 데미지 적용 필요
 							nowDamage = true;
 							time = 0;
 							return;
 						}
 					}
-
 				}
 			}
 			else
@@ -74,8 +72,19 @@ void Player::Update(float dt)
 			}
 		}
 
+		cellCountX = 15;
+		cellCountY = 15;
+		cellSizeX = TEXTURE_MANAGER.GetResource("graphics/background_sheet.png")->getSize().x; // 50
+		cellSizeY = TEXTURE_MANAGER.GetResource("graphics/background_sheet.png")->getSize().y / 4; // 50
 
 
+		float leftEdge = -cellSizeX * cellCountX * 0.5f + cellSizeX;
+		float rightEdge = cellCountX * cellSizeX - cellSizeX * cellCountX * 0.5f - cellSizeX;
+		float topEdge = -cellSizeY * cellCountY * 0.5f + cellSizeY;
+		float bottomEdge = cellCountY * cellSizeY - cellSizeY * cellCountY * 0.5f - cellSizeY;
+
+		position.x = std::max(leftEdge, std::min(rightEdge, position.x));
+		position.y = std::max(topEdge, std::min(bottomEdge, position.y));
 
 		sf::Vector2i mousePosition = (sf::Vector2i)InputManager::GetMousePos();
 		sf::Vector2f mouseWorldPosition = SCENE_MANAGER.GetCurrentScene()->ScreenToWorld(mousePosition);
@@ -95,7 +104,6 @@ void Player::Update(float dt)
 
 		Translate(direction * speed * dt);
 
-		std::cout << "hp : " << hp << std::endl;
 
 		break;
 	}

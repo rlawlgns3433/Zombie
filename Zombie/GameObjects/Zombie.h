@@ -26,6 +26,7 @@ protected :
 	Zombie& operator=(Zombie&&)			= delete;
 
 	std::list<GameObject*> bullets;
+
 	Player* player;
 	Types type = Types::None;
 

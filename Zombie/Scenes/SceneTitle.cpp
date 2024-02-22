@@ -9,15 +9,35 @@
 SceneTitle::SceneTitle(SceneIDs id)
 	: Scene(id)
 {
-}
-
-SceneTitle::~SceneTitle()
-{
+	windowX = FRAMEWORK.GetWindowSize().x;
+	windowY = FRAMEWORK.GetWindowSize().y;
 }
 
 void SceneTitle::Init()
 {
+	spriteGoBackground = new SpriteGo("background");
+	spriteGoBackground->SetTexture("graphics/background.png");
+	AddGameObject(spriteGoBackground);
 
+	textIntro = new TextGo("intro");
+	textIntro->SetFont("fonts/zombiecontrol.ttf");
+	textIntro->SetText("PRESS ENTER TO PLAY");
+	textIntro->SetTextSize(70);
+	textIntro->SetScale({ 1.f, 1.5f });
+	textIntro->SetOrigin(Origins::MC);
+	textIntro->SetPosition(windowX * 0.2f, windowY * 0.8f);
+	AddGameObject(textIntro, Layers::Ui);
+
+	textHighScore = new TextGo("highscore");
+	textHighScore->SetFont("fonts/zombiecontrol.ttf");
+	textHighScore->SetText("HI SCORE : " + std::to_string(100)); // 파일 입출력으로 가져오기
+	textHighScore->SetTextSize(30);
+	textHighScore->SetScale({ 1.f, 1.5f });
+	textHighScore->SetOrigin(Origins::TC);
+	textHighScore->SetPosition({ windowX * 0.4f, 0 });
+	AddGameObject(textHighScore, Layers::Ui);
+
+	Scene::Init();
 }
 
 void SceneTitle::Release()
@@ -25,7 +45,10 @@ void SceneTitle::Release()
 	Scene::Release();
 
 	textIntro = nullptr;
+}
 
+void SceneTitle::Reset()
+{
 }
 
 void SceneTitle::Enter()
@@ -36,6 +59,8 @@ void SceneTitle::Enter()
 
 void SceneTitle::Exit()
 {
+	Scene::Exit();
+
 	FRAMEWORK.SetTimeScale(1.f);
 }
 
@@ -45,15 +70,18 @@ void SceneTitle::Update(float dt)
 
 	time += dt;
 
-	//BlinkIntro(0.7f);
+	BlinkIntro(0.5f);
 
 	if (InputManager::GetKeyDown(sf::Keyboard::Enter))
 	{
-		//SCENEMANAGER.StopBGM();
-		//SCENEMANAGER.ChangeScene(SceneIDs::SceneSelectMode);
+		SCENE_MANAGER.ChangeScene(SceneIDs::SceneSkillUp);
 	}
 }
 
+void SceneTitle::Draw(sf::RenderWindow& window)
+{
+	Scene::Draw(window);
+}
 
 void SceneTitle::BlinkIntro(float blinkTime)
 {
