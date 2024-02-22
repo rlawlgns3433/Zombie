@@ -8,23 +8,26 @@ protected :
 	GameObject& operator=(GameObject&&)		 = delete;
 
 	Origins originPreset = Origins::TL;
-	sf::Transform rotation;
 	std::string name = "";
 
 	sf::Vector2f origin = {0.f, 0.f};
 	sf::Vector2f position = {0.f, 0.f};
 	sf::Vector2f scale = { 1.f, 1.f };
 
+	float rotation = 0.f;
+
 	bool isActive = true;
 	bool isFlipX = false;
 	bool isFlipY = false;
 
+public :
 	int sortLayer = 0; // 다른 레이어 간 순서
 	int sortOrder = 0; // 동일 레이어 간 순서
 
-public :
-	GameObject(const std::string& name = "");
+	static bool CompareDrawOrder(const GameObject& lhs, const GameObject& rhs);
+	static bool CompareDrawOrder(const GameObject* lhs, const GameObject* rhs);
 
+	GameObject(const std::string& name = "");
 	virtual ~GameObject();
 	
 	bool GetActive() const { return this->isActive; }
@@ -50,8 +53,8 @@ public :
 	virtual void Update(float dt);
 	virtual void Draw(sf::RenderWindow& window);	
 
-	sf::Transform GetRotation() const { return this->rotation; }
-	virtual void SetRotation(const sf::Transform& rot) { this->rotation = rot; }
+	float  GetRotation() const { return this->rotation; }
+	virtual void SetRotation(float rot) { this->rotation = rot; }
 
 	sf::Vector2f GetScale() const { return this->scale; }
 	virtual void SetScale(const sf::Vector2f& scale);
@@ -63,5 +66,12 @@ public :
 
 	std::string GetName() const { return this->name; }
 	virtual void SetName(std::string& name) { this->name = name; }
-};
 
+	int GetSortLayer() const { return this->sortLayer; }
+	int SetSortLayer(int layer) { this->sortLayer = layer; }
+	int GetSortLayer() { return this->sortOrder; }
+	int SetSortOrder(int order) { this->sortOrder = order; }
+
+	bool operator>(const GameObject& rhs) const;
+	bool operator<(const GameObject& rhs) const;
+};

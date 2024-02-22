@@ -1,9 +1,11 @@
 #pragma once
-#include <memory>
 class GameObject;
 
 class Scene
 {
+public :
+
+
 protected :
 	Scene(const Scene&)				= delete;
 	Scene(Scene&&)					= delete;
@@ -13,15 +15,22 @@ protected :
 	SceneIDs id;
 	std::unordered_map<size_t, std::vector<GameObject*>> gameObjectsMap;
 
-	std::list<GameObject*> gameObjects; // 스마트 포인터로 변경 필요
-	std::list<GameObject*> gameOBjectsActive; // 활성화 된 GameObjects
-	std::list<GameObject*> gameOBjectsInActive; // 비활성화 된 GameObjects
+	//std::vector<std::list<GameObject*>> gameObjects; // gameObjects[0], gameObjects[1]
+	//std::priority_queue<GameObject*,std::vector<GameObject*>, Utils::Sort::sortGam> gameObjects; // !!!PQ로 바꿔보기!!!
+	std::list<GameObject*> gameObjects; // 활성화 된 GameObjects
+	std::list<GameObject*> uiGameObjects;
+
+	std::list<GameObject*> resortingGameObjects;
+	std::list<GameObject*> removeGameObjects;
+
+	sf::View worldView;
+	sf::View uiView;
 
 	ResourceManager<sf::Texture>& textureManager;
 	ResourceManager<sf::Font>& fontManager;
 	ResourceManager<sf::SoundBuffer>& soundManager;
 
-	// active, inactive 된 gameobjects를 다르게 관리하는 리스트 필요
+	GameStatus status = GameStatus::Game; // 변경 필요
 
 public :
 	Scene(SceneIDs id);
@@ -29,18 +38,26 @@ public :
 
 	virtual void Init();
 	virtual void Release();
-
 	virtual void Enter(); // Scene 입장 시
-	virtual void Exit() = 0;
-	
+	virtual void Exit() {};
 	virtual void Update(float dt);
 	virtual void Draw(sf::RenderWindow& window);
 
-	virtual GameObject* FindGameObject(const std::string& name);
-	virtual std::list<GameObject*>& FindAllGameObjectwithName(const std::string& name);
-	virtual bool FindAll(const std::string& name, std::list<GameObject*>& list);
-	virtual GameObject* AddGameObject(GameObject* gameObject);
-	virtual GameObject* AddGameObject(const std::string& name);
+	virtual GameObject* FindGameObject(const std::string& name, Layers layer = Layers::EveryThing);
+	virtual std::list<GameObject*>& FindAllGameObjectwithName(const std::string& name, Layers layer = Layers::EveryThing);
+	virtual int FindAll(const std::string& name, std::list<GameObject*>& list, Layers layer = Layers::EveryThing);
+	virtual GameObject* AddGameObject(GameObject* gameObject, Layers layer = Layers::World);
+	virtual GameObject* AddGameObject(const std::string& name, Layers layer = Layers::World);
 	virtual void RemoveGameObject(GameObject* gameObject);
 	virtual void RemoveGameObject(std::string name);
+	virtual void ResortGameObject(GameObject* obj);
+
+
+	sf::Vector2f ScreenToWorld(sf::Vector2i screenPosition);
+	sf::Vector2i WorldToScreen(sf::Vector2f worldPosition);
+	sf::Vector2f ScreenToUi(sf::Vector2i screenPosition);
+	sf::Vector2i UiToScreen(sf::Vector2f uiPosition);
+
+	GameStatus GetStatus() const { return this->status; }
+	void SetStatus(GameStatus newStatus);
 };

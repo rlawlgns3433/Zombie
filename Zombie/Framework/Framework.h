@@ -6,14 +6,14 @@ class Framework : public Singleton<Framework>
 protected :
 	friend class Singleton<Framework>;
 
-public :
-	Framework()								   = default;
-	virtual ~Framework()					   = default;
 	Framework(const Framework& ref)			   = delete;
-	Framework(Framework&& ref)			       = delete;
+	Framework(Framework&& ref)				   = delete;
 	Framework& operator=(const Framework& ref) = delete;
 	Framework& operator=(Framework&& ref)	   = delete;
 
+public :
+	Framework()								   = default;
+	~Framework() override					   = default;
 
 	sf::RenderWindow window;
 	sf::Vector2i windowSize;
@@ -42,7 +42,6 @@ public:
 	virtual void Init(int width, int height, const std::string& name = "Game");
 	virtual void Do();
 	virtual void Release();
-
 };
 
 #define FRAMEWORK (Singleton<Framework>::Instance())

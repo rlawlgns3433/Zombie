@@ -44,3 +44,18 @@ enum class GameStatus
 	GameOver,
 	Pause,
 };
+
+enum class ItemType
+{
+	None,
+	Bullet,
+	HealthBox,
+};
+
+enum Layers
+{
+	None = 0,
+	World = 1,
+	Ui = 2,
+	EveryThing = 0xFFFFFFFF
+};

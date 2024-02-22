@@ -30,6 +30,12 @@ void SpriteGo::SetPosition(const sf::Vector2f& pos)
 	sprite.setPosition(this->position);
 }
 
+void SpriteGo::SetRotation(float rot)
+{
+	GameObject::SetRotation(rot);
+	sprite.setRotation(rot);
+}
+
 void SpriteGo::SetOrigin(Origins preset)
 {
 
@@ -39,7 +45,7 @@ void SpriteGo::SetOrigin(Origins preset)
 	}
 
 	originPreset = preset;
-	Utils::SetOrigin(sprite, originPreset);
+	Utils::Origin::SetOrigin(sprite, originPreset);
 }
 
 void SpriteGo::SetOrigin(const sf::Vector2f& origin)

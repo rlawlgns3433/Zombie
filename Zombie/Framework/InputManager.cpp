@@ -1,21 +1,15 @@
-#include "InputManager.h"
 #include "pch.h"
-#include <algorithm>
 
 std::map<Axis, AxisInfo> InputManager::axisInfoMap;
-//std::unordered_map<std::unordered_map<sf::Keyboard::Key, sf::Time>, bool> InputManager::downKeyMap;
-//std::unordered_map<std::unordered_map<sf::Keyboard::Key, sf::Time>, bool> InputManager::upKeyMap;
-//std::unordered_map<std::unordered_map<sf::Keyboard::Key, sf::Time>, bool> InputManager::ingKeyMap;
 
 std::list<sf::Keyboard::Key> InputManager::downKeyList;
 std::list<sf::Keyboard::Key> InputManager::upKeyList;
 std::list<sf::Keyboard::Key> InputManager::ingKeyList;
 
-sf::Mouse InputManager::mouse;
+sf::Vector2f InputManager::mousePos;
 
 void InputManager::Init()
 {
-
 	// Horizontal
 	AxisInfo infoHorizontal;
 	infoHorizontal.axis = Axis::Horizontal;
@@ -43,6 +37,8 @@ void InputManager::Init()
 
 void InputManager::Update(float dt)
 {
+	mousePos = (sf::Vector2f)sf::Mouse::getPosition(FRAMEWORK.GetWindow());
+
 	for (auto& pair : axisInfoMap)
 	{
 		AxisInfo& axisInfo = pair.second;
@@ -54,7 +50,7 @@ void InputManager::Update(float dt)
 			speed = axisInfo.value > 0.f ? -1.f : 1.f;
 		}
 		axisInfo.value += speed * axisInfo.sensitive * dt;
-		axisInfo.value = Utils::Clamp(axisInfo.value, -1.f, 1.f);
+		axisInfo.value = Utils::MyMath::Clamp(axisInfo.value, -1.f, 1.f);
 
 		if (raw == 0.f && abs(axisInfo.value) < speed * axisInfo.sensitive * dt)
 		{
@@ -65,22 +61,17 @@ void InputManager::Update(float dt)
 
 void InputManager::UpdateEvent(const sf::Event& event)
 {
-	// 해당 키가 리스트에 없다면 눌린 첫 프레임
 	switch (event.type)
 	{
 	case sf::Event::KeyPressed:
 		if (!GetKey(event.key.code))
 		{
-			//downKeyMap[(sf::Keyboard::Key)EncryptKey(event.key.code)] = true;
-			//ingKeyMap[(sf::Keyboard::Key)EncryptKey(event.key.code)] = true;
 			downKeyList.push_back(event.key.code);
 			ingKeyList.push_back(event.key.code);
 		}
 		break;
 
 	case sf::Event::KeyReleased:
-		//ingKeyMap[(sf::Keyboard::Key)EncryptKey(event.key.code)] = false;
-		//upKeyMap[(sf::Keyboard::Key)EncryptKey(event.key.code)] = true;
 		ingKeyList.remove(event.key.code);
 		upKeyList.push_back(event.key.code);
 		break;
@@ -109,23 +100,17 @@ void InputManager::Clear()
 
 bool InputManager::GetKeyDown(sf::Keyboard::Key key)
 {
-	//return downKeyMap[key];
-
 	return std::find(downKeyList.begin(), downKeyList.end(), key) != downKeyList.end();
 }
 
 bool InputManager::GetKeyUp(sf::Keyboard::Key key)
 {
-	//return upKeyMap[key];
 	return std::find(upKeyList.begin(), upKeyList.end(), key) != upKeyList.end();
-	 
 }
 
 bool InputManager::GetKey(sf::Keyboard::Key key)
 {
-	//return ingKeyMap[key];
 	return std::find(ingKeyList.begin(), ingKeyList.end(), key) != ingKeyList.end();
-
 }
 
 float InputManager::GetAxisRaw(Axis axis)
@@ -169,12 +154,6 @@ float InputManager::GetAxis(Axis axis)
 	return findInfo->second.value;
 }
 
-
-sf::Vector2f InputManager::GetMousePos()
-{
-	return (sf::Vector2f)mouse.getPosition();
-}
-
 bool InputManager::GetMouseButtonDown(sf::Mouse::Button mouse)
 {
 	return std::find(downKeyList.begin(), downKeyList.end(), MouseButtonToKey(mouse)) != downKeyList.end();
@@ -189,27 +168,3 @@ bool InputManager::GetMouseButton(sf::Mouse::Button mouse)
 {
 	return std::find(ingKeyList.begin(), ingKeyList.end(), MouseButtonToKey(mouse)) != ingKeyList.end();
 }
-
-
-
-//int InputManager::EncryptKey(sf::Keyboard::Key key)
-//{
-//	int p = Utils::GenerateRandomPrime();
-//	int q = Utils::GenerateRandomPrime();
-//	int n = p * q;
-//	int z = (p - 1) * (q - 1);
-//	int e = Utils::GetPublicKeyExponent(z);
-//	int d = Utils::GetPrivateKeyExponent(e, z);
-//	return Utils::Encrypt((int)key, e, n);
-//}
-//
-//sf::Keyboard::Key InputManager::DecryptKey(int cipherText)
-//{
-//	int p = Utils::GenerateRandomPrime();
-//	int q = Utils::GenerateRandomPrime();
-//	int n = p * q;
-//	int z = (p - 1) * (q - 1);
-//	int e = Utils::GetPublicKeyExponent(z);
-//	int d = Utils::GetPrivateKeyExponent(e, z);
-//	return (sf::Keyboard::Key)(Utils::Decrypt(cipherText, d, n));
-//}

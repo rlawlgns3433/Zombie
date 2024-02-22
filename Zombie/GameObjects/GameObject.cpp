@@ -1,10 +1,27 @@
 #include "pch.h"
 #include "GameObject.h"
 
+bool GameObject::CompareDrawOrder(const GameObject& lhs, const GameObject& rhs)
+{
+	if (lhs.sortLayer != rhs.sortLayer)
+	{
+		return lhs.sortLayer < rhs.sortLayer;
+	}
+	return lhs.sortOrder < rhs.sortOrder;
+}
+
+bool GameObject::CompareDrawOrder(const GameObject* lhs, const GameObject* rhs)
+{
+	if (lhs->sortLayer != rhs->sortLayer)
+	{
+		return lhs->sortLayer < rhs->sortLayer;
+	}
+	return lhs->sortOrder < rhs->sortOrder;
+}
+
 GameObject::GameObject(const std::string& name)
 	: name(name)
 {
-
 }
 
 GameObject::~GameObject()
@@ -44,4 +61,23 @@ void GameObject::Draw(sf::RenderWindow& window)
 
 void GameObject::SetScale(const sf::Vector2f& scale)
 {
+	this->scale = scale;
+}
+
+bool GameObject::operator>(const GameObject& rhs) const
+{
+	if (sortLayer != rhs.sortLayer)
+	{
+		return sortLayer > rhs.sortLayer;
+	}
+	return sortOrder > rhs.sortOrder;
+}
+
+bool GameObject::operator<(const GameObject& rhs) const
+{
+	if (sortLayer != rhs.sortLayer)
+	{
+		return sortLayer < rhs.sortLayer;
+	}
+	return sortOrder < rhs.sortOrder;
 }

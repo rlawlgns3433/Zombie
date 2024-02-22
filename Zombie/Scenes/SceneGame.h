@@ -2,16 +2,22 @@
 #include "Scene.h"
 
 class Player;
+class ZombieSpawner;
+class ItemSpawner;
 
 class SceneGame : public Scene
 {
 protected :
 	GameStatus status = GameStatus::Game;
 
+	std::vector<ZombieSpawner*> zombieSpawners;
+	std::vector<ItemSpawner*> itemSpawners;
 	Player* player = nullptr;
 
 	float windowX = 0.f;
 	float windowY = 0.f;
+
+	unsigned wave = 1;
 
 public :
 	SceneGame(SceneIDs id);
@@ -35,6 +41,6 @@ public :
 	void UpdatePause(float dt);
 	void Draw(sf::RenderWindow& window);
 
-	void SetStatus(GameStatus newStatus);
+	unsigned GetWave() const { return wave; }
 
 };

@@ -4,7 +4,7 @@
 template <typename T>
 class ResourceManager : public Singleton<ResourceManager<T>> // 템플릿 클래스
 {
-private:
+protected:
 	std::unordered_map<std::string, T*> resourceMap;
 	friend class Singleton<ResourceManager<T>>;
 

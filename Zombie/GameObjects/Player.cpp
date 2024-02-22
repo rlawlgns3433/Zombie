@@ -12,6 +12,11 @@ void Player::Init()
 	SetTexture(textureId);
 	SetOrigin(Origins::MC);
 
+	gun = new Gun("gun");
+	gun->Init();
+	SCENE_MANAGER.GetCurrentScene()->AddGameObject(gun); // position 없음
+
+	crossHair = dynamic_cast<CrossHair*>(SCENE_MANAGER.GetCurrentScene()->FindGameObject("crosshair"));
 }
 
 void Player::Release()
@@ -22,30 +27,84 @@ void Player::Release()
 void Player::Reset()
 {
 	SpriteGo::Reset();
+	SetPosition({ 0, 0 });
 }
 
 void Player::Update(float dt)
 {
 	SpriteGo::Update(dt);
+	time += dt;
 
-	sf::Vector2f mousePosition = InputManager::GetMousePos();
-	sf::Vector2f mouseWorldPosition = mousePosition; // 변환 필요
 
-	look = mouseWorldPosition - position;
-	Utils::Normalize(look);
-
-	float angle = Utils::Angle(look);
-	sprite.setRotation(angle);
-
-	direction.x = InputManager::GetAxis(Axis::Horizontal);
-	direction.y = InputManager::GetAxis(Axis::Vertical);
-
-	if (Utils::Magnitude(direction) > 1.f) // 대각 이동 시 속도가 1.414 배 빠르기 때문에 정규화한다.
+	switch (SCENE_MANAGER.GetCurrentScene()->GetStatus())
 	{
-		Utils::Normalize(direction);
+	case GameStatus::Awake:
+		break;
+	case GameStatus::Game:
+	{
+		if (InputManager::GetMouseButton(sf::Mouse::Left))
+		{
+			gun->Fire();
+		}
+
+
+		if (time > damageInterval)
+		{
+			if (!nowDamage)
+			{
+				for (int i = 0; i < Zombie::zombieCnt; ++i)
+				{
+					GameObject* obj = SCENE_MANAGER.GetCurrentScene()->FindGameObject("zombie" + std::to_string(i));
+					if (obj != nullptr)
+					{
+						if (Utils::MyMath::Distance(position, obj->GetPosition()) < 100.f)
+						{
+							hp -= 20;
+							nowDamage = true;
+							time = 0;
+							return;
+						}
+					}
+
+				}
+			}
+			else
+			{
+				nowDamage = false;
+			}
+		}
+
+
+
+
+		sf::Vector2i mousePosition = (sf::Vector2i)InputManager::GetMousePos();
+		sf::Vector2f mouseWorldPosition = SCENE_MANAGER.GetCurrentScene()->ScreenToWorld(mousePosition);
+
+		look = mouseWorldPosition - position;
+		Utils::MyMath::Normalize(look);
+
+		SetRotation(Utils::MyMath::Angle(look));
+
+		direction.x = InputManager::GetAxis(Axis::Horizontal);
+		direction.y = InputManager::GetAxis(Axis::Vertical);
+
+		if (Utils::MyMath::Magnitude(direction) > 1.f)
+		{
+			Utils::MyMath::Normalize(direction);
+		}
+
+		Translate(direction * speed * dt);
+
+		std::cout << "hp : " << hp << std::endl;
+
+		break;
+	}
+	case GameStatus::GameOver:
+		break;
+	case GameStatus::Pause:
+		break;
 	}
 
-	Translate(direction * speed * dt);
 
 }
 

@@ -5,10 +5,13 @@
 // C++
 #include <iostream>
 #include <list>
+#include <map>
 #include <unordered_map>
 #include <vector>
+#include <set>
 #include <string>
 #include <cmath>
+#include <queue>
 
 // SFML
 #include <SFML/Graphics.hpp>
@@ -16,7 +19,6 @@
 
 // Framework
 #include "Defines.h"
-#include "Utils.h"
 #include "Singleton.h"
 #include "InputManager.h"
 #include "ResourceManager.h"
@@ -24,3 +26,10 @@
 #include "Scene.h"
 #include "GameObject.h"
 #include "Framework.h"
+
+// Utils
+#include "MyMath.h"
+#include "Origin.h"
+#include "Vector2.h"
+#include "Random.h"
+#include "Sort.h"

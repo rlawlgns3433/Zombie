@@ -27,6 +27,8 @@ public :
 
 	void SetPosition(const sf::Vector2f& pos) override;
 	void SetPosition(float x, float y)		  override;
+	void SetRotation(float rot) override;
+
 	void SetOrigin(Origins preset)			  override;
 	void SetOrigin(const sf::Vector2f& origin) override;
 

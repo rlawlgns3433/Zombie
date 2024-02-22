@@ -6,10 +6,14 @@ protected :
 	sf::VertexArray va;
 	sf::Texture* texture;
 
+	sf::Transform transform;
+
+	sf::Vector2i cellCount = { 15, 15 }; // ¸ã Å©±â
+	sf::Vector2f cellSize;
+
 	std::string spriteSheetId;
 
-	sf::Vector2i cellCount = { 10, 10 }; // ¸ã Å©±â
-	sf::Vector2f cellSize;
+	int textureElementCount = 4;
 
 public :
 	Tilemap(const std::string& name = "");
@@ -20,11 +24,13 @@ public :
 	void Update(float dt) override;
 	void Draw(sf::RenderWindow& window) override;
 
+	void UpdateTransfrom();
 	void Translate(const sf::Vector2f& delta) override;
 
 	void Set(const sf::Vector2i& cellCount, const sf::Vector2f& cellSize);
 	void SetPosition(const sf::Vector2f& pos) override;
 	void SetPosition(float x, float y) override;
+	void SetRotation(float rot) override;
 	void SetOrigin(Origins preset) override;
 	void SetOrigin(const sf::Vector2f& origin) override;
 	void SetScale(const sf::Vector2f& scale) override;

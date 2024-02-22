@@ -65,6 +65,12 @@ void TextGo::SetPosition(float x, float y)
 	text.setPosition(this->position);
 }
 
+void TextGo::SetRotation(float rot)
+{
+	GameObject::SetRotation(rot);
+	text.setRotation(rot);
+}
+
 void TextGo::SetOrigin(Origins preset)
 {
 	if (preset == Origins::CUSTOM)
@@ -73,7 +79,7 @@ void TextGo::SetOrigin(Origins preset)
 	}
 
 	originPreset = preset;
-	Utils::SetOrigin(text, originPreset);
+	Utils::Origin::SetOrigin(text, originPreset);
 }
 
 void TextGo::SetOrigin(const sf::Vector2f& origin)

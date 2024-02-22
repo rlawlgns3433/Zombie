@@ -10,8 +10,8 @@ void Tilemap::Init()
 {
 	GameObject::Init();
 	SetSpriteSheedId("graphics/background_sheet.png");
-	Set({ 15,15 }, { 50,50 });
-	SetOrigin(Origins::BR);
+	Set(cellCount, { (float)texture->getSize().x, texture->getSize().y / float(textureElementCount)});
+	SetOrigin(Origins::MC);
 }
 
 void Tilemap::Release()
@@ -58,7 +58,7 @@ void Tilemap::Set(const sf::Vector2i& count, const sf::Vector2f& size)
 	{
 		for (int col = 0; col < count.x; ++col)
 		{
-			int textureIndex = Utils::RandomRange(0, 3);
+			int textureIndex = Utils::Random::RandomRange(0, 3);
 
 			if (row == 0 || row == count.y - 1 || col == 0 || col == count.x - 1)
 			{
@@ -66,7 +66,7 @@ void Tilemap::Set(const sf::Vector2i& count, const sf::Vector2f& size)
 			}
 
 			int quadIndex = row * count.x + col;
-			sf::Vector2f quadPos(position.x + size.x * col, position.y + size.y * row);
+			sf::Vector2f quadPos(size.x * col, size.y * row);
 
 			for (int vertex = 0; vertex < 4; ++vertex)
 			{
@@ -82,73 +82,86 @@ void Tilemap::Set(const sf::Vector2i& count, const sf::Vector2f& size)
 
 void Tilemap::Translate(const sf::Vector2f& delta)
 {
-	
+	GameObject::Translate(delta);
+	UpdateTransfrom();
 }
 
 void Tilemap::Draw(sf::RenderWindow& window)
 {
 	GameObject::Draw(window);
 
-	window.draw(va, texture);
+	sf::RenderStates state;
+	state.texture = texture;
+	state.transform = transform;
+
+	window.draw(va, state);
+}
+
+void Tilemap::UpdateTransfrom()
+{
+	transform = sf::Transform::Identity;
+
+	float scaleX = isFlipX ? -scale.x : scale.x;
+	float scaleY = isFlipY ? -scale.y : scale.y;
+
+	transform.scale(scaleX, scaleY, position.x , position.y);
+	transform.rotate(rotation, position.x, position.y);
+	transform.translate(position - origin);
 }
 
 void Tilemap::SetPosition(const sf::Vector2f& pos)
 {
-	sf::Vector2f delta = pos - position;
-	for (int i = 0; i < va.getVertexCount(); ++i)
-	{
-		va[i].position += delta;
-	}
-
-	position = pos;
+	GameObject::SetPosition(pos);
+	UpdateTransfrom();
 }
 
 void Tilemap::SetPosition(float x, float y)
 {
-	sf::Vector2f delta = sf::Vector2f(x, y) - position;
-	for (int i = 0; i < va.getVertexCount(); ++i)
-	{
-		va[i].position += delta;
-	}
-
-	position = { x, y };
+	GameObject::SetPosition({x, y});
+	UpdateTransfrom();
 }
 
 void Tilemap::SetOrigin(Origins preset)
 {
+	if (preset == Origins::CUSTOM)
+		return;
+	
 	originPreset = preset;
-
-	for (int i = 0; i < va.getVertexCount(); ++i)
-	{
-		sf::Vector2f offset = { cellCount.x * cellSize.x * ((int)originPreset % 3) * 0.5f, cellCount.y * cellSize.y * ((int)originPreset / 3) * 0.5f };
-
-		va[i].position -= offset;
-	}
+	sf::FloatRect bound = va.getBounds();
+	origin.x = bound.width * ((int)originPreset % 3) * 0.5f;
+	origin.y = bound.height * ((int)originPreset / 3) * 0.5f;
+	UpdateTransfrom();
 }
 
 void Tilemap::SetOrigin(const sf::Vector2f& origin)
 {
 	originPreset = Origins::CUSTOM;
-	this->origin - origin;
-
-	for (int i = 0; i < va.getVertexCount(); ++i)
-	{
-		sf::Vector2f offset = { cellCount.x * cellSize.x * ((int)originPreset % 3) * 0.5f, cellCount.y * cellSize.y * ((int)originPreset / 3) * 0.5f };
-
-		va[i].position -= offset;
-	}
+	this->origin = origin;
+	UpdateTransfrom();
 }
 
 void Tilemap::SetScale(const sf::Vector2f& scale)
 {
+	GameObject::SetScale(scale);
+	UpdateTransfrom();
 }
 
 void Tilemap::SetFlipX(bool flip)
 {
+	GameObject::SetFlipX(flip);
+	UpdateTransfrom();
+}
+
+void Tilemap::SetRotation(float rot)
+{
+	GameObject::SetRotation(rot);
+	UpdateTransfrom();
 }
 
 void Tilemap::SetFlipY(bool flip)
 {
+	GameObject::SetFlipY(flip);
+	UpdateTransfrom();
 }
 
 void Tilemap::SetSpriteSheedId(const std::string& id)
