@@ -33,6 +33,9 @@ void Player::Release()
 void Player::Reset()
 {
 	SpriteGo::Reset();
+
+	tilemap = dynamic_cast<Tilemap*>(SCENE_MANAGER.GetCurrentScene()->FindGameObject("background"));
+
 	SetPosition({ 0, 0 });
 }
 
@@ -48,11 +51,43 @@ void Player::Update(float dt)
 		break;
 	case GameStatus::Game:
 	{
+
 		if (InputManager::GetMouseButton(sf::Mouse::Left))
 		{
 			gun->Fire();
 		}
 
+		sf::Vector2i mousePosition = (sf::Vector2i)InputManager::GetMousePos();
+		sf::Vector2f mouseWorldPosition = SCENE_MANAGER.GetCurrentScene()->ScreenToWorld(mousePosition);
+
+		look = mouseWorldPosition - position;
+		Utils::MyMath::Normalize(look);
+
+		SetRotation(Utils::MyMath::Angle(look));
+
+		direction.x = InputManager::GetAxis(Axis::Horizontal);
+		direction.y = InputManager::GetAxis(Axis::Vertical);
+
+		if (Utils::MyMath::Magnitude(direction) > 1.f)
+		{
+			Utils::MyMath::Normalize(direction);
+		}
+
+		sf::Vector2f pos = position + direction * speed * dt;
+		if (tilemap != nullptr)
+		{
+			sf::FloatRect tilemapBounds = tilemap->GetGlobalBounds();
+			const sf::Vector2f tileSize = tilemap->GetCellSize();
+			tilemapBounds.left += tileSize.x;
+			tilemapBounds.top += tileSize.y;
+			tilemapBounds.width -= tileSize.x * 2.f;
+			tilemapBounds.height -= tileSize.y * 2.f;
+
+			pos.x = Utils::MyMath::Clamp(pos.x, tilemapBounds.left, tilemapBounds.left + tilemapBounds.width);
+			pos.y = Utils::MyMath::Clamp(pos.y, tilemapBounds.top, tilemapBounds.top + tilemapBounds.height);
+		}
+
+		SetPosition(pos);
 
 		if (time > damageInterval)
 		{
@@ -79,39 +114,6 @@ void Player::Update(float dt)
 				nowDamage = false;
 			}
 		}
-
-		cellCountX = 15;
-		cellCountY = 15;
-		cellSizeX = TEXTURE_MANAGER.GetResource("graphics/background_sheet.png")->getSize().x; // 50
-		cellSizeY = TEXTURE_MANAGER.GetResource("graphics/background_sheet.png")->getSize().y / 4; // 50
-
-
-		float leftEdge = -cellSizeX * cellCountX * 0.5f + cellSizeX;
-		float rightEdge = cellCountX * cellSizeX - cellSizeX * cellCountX * 0.5f - cellSizeX;
-		float topEdge = -cellSizeY * cellCountY * 0.5f + cellSizeY;
-		float bottomEdge = cellCountY * cellSizeY - cellSizeY * cellCountY * 0.5f - cellSizeY;
-
-		position.x = std::max(leftEdge, std::min(rightEdge, position.x));
-		position.y = std::max(topEdge, std::min(bottomEdge, position.y));
-
-		sf::Vector2i mousePosition = (sf::Vector2i)InputManager::GetMousePos();
-		sf::Vector2f mouseWorldPosition = SCENE_MANAGER.GetCurrentScene()->ScreenToWorld(mousePosition);
-
-		look = mouseWorldPosition - position;
-		Utils::MyMath::Normalize(look);
-
-		SetRotation(Utils::MyMath::Angle(look));
-
-		direction.x = InputManager::GetAxis(Axis::Horizontal);
-		direction.y = InputManager::GetAxis(Axis::Vertical);
-
-		if (Utils::MyMath::Magnitude(direction) > 1.f)
-		{
-			Utils::MyMath::Normalize(direction);
-		}
-
-		Translate(direction * speed * dt);
-
 
 		break;
 	}

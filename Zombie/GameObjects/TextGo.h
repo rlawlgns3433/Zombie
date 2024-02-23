@@ -37,4 +37,7 @@ public :
 	void SetFlipY(bool flip)				  override;
 
 	virtual void Draw(sf::RenderWindow& window);
+
+	sf::FloatRect GetLocalBounds() override;
+	sf::FloatRect GetGlobalBounds() override;
 };

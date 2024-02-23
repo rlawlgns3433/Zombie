@@ -169,3 +169,18 @@ void Tilemap::SetSpriteSheedId(const std::string& id)
 	this->spriteSheetId = id;
 	this->texture = TEXTURE_MANAGER.GetResource(spriteSheetId);
 }
+
+sf::FloatRect Tilemap::GetLocalBounds()
+{
+	sf::FloatRect bounds = va.getBounds(); // 정점기준 바운드
+	bounds.left = origin.x;
+	bounds.top = origin.y;
+
+	return bounds;
+}
+
+sf::FloatRect Tilemap::GetGlobalBounds()
+{
+	sf::FloatRect bounds = va.getBounds();
+	return transform.transformRect(bounds);
+}

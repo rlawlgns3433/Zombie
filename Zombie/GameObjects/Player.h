@@ -3,9 +3,11 @@
 #include "CrossHair.h"
 #include "Gun.h"
 #include "HealthBar.h"
+#include "Tilemap.h"
 
 class Gun;
 class HealthBar;
+class Tilemap;
 
 class Player : public SpriteGo
 {
@@ -14,6 +16,8 @@ protected :
 	Player(Player&&)					= delete;
 	Player& operator=(const Player&)	= delete;
 	Player& operator=(Player&&)			= delete;
+
+	Tilemap* tilemap = nullptr;
 
 	Gun* gun = nullptr;
 	CrossHair* crossHair = nullptr;

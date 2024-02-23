@@ -38,4 +38,10 @@ public :
 	void SetFlipY(bool flip) override;
 
 	void SetSpriteSheedId(const std::string& id);
+
+	sf::FloatRect GetLocalBounds() override;
+	sf::FloatRect GetGlobalBounds() override;
+
+	const sf::Vector2i& GetCellCount() const { return cellCount; }
+	const sf::Vector2f& GetCellSize() const { return cellSize; }
 };

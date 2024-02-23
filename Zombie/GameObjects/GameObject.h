@@ -72,6 +72,9 @@ public :
 	int GetSortOrder() { return this->sortOrder; }
 	void SetSortOrder(int order) { this->sortOrder = order; }
 
+	virtual sf::FloatRect GetLocalBounds() { return sf::FloatRect(); }
+	virtual sf::FloatRect GetGlobalBounds() { return sf::FloatRect(position, { 0.f,0.f }); }
+
 	bool operator>(const GameObject& rhs) const;
 	bool operator<(const GameObject& rhs) const;
 };

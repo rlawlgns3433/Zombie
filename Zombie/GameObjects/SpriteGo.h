@@ -30,4 +30,7 @@ public :
 
 	void Reset() override;
 	void Draw(sf::RenderWindow& window);
+
+	sf::FloatRect GetLocalBounds() override;
+	sf::FloatRect GetGlobalBounds() override;
 };

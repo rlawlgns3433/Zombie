@@ -88,6 +88,16 @@ void SpriteGo::SetFlipY(bool flip)
 	SetScale(scale);
 }
 
+sf::FloatRect SpriteGo::GetLocalBounds()
+{
+	return sprite.getLocalBounds();
+}
+
+sf::FloatRect SpriteGo::GetGlobalBounds()
+{
+	return sprite.getGlobalBounds();
+}
+
 void SpriteGo::Reset()
 {
 	sprite.setTexture(*TEXTURE_MANAGER.GetResource(textureId));

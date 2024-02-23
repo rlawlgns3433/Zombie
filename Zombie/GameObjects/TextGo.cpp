@@ -131,3 +131,13 @@ void TextGo::Draw(sf::RenderWindow& window)
 {
 	window.draw(text);
 }
+
+sf::FloatRect TextGo::GetLocalBounds()
+{
+	return text.getLocalBounds();
+}
+
+sf::FloatRect TextGo::GetGlobalBounds()
+{
+	return text.getGlobalBounds();
+}

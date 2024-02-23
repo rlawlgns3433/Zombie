@@ -45,7 +45,7 @@ void SceneGame::Init()
     player = new Player("player");
     AddGameObject(player);
 
-    Tilemap* tilemap = new Tilemap("Background");
+    Tilemap* tilemap = new Tilemap("background");
     tilemap->sortLayer = -1.f;
     AddGameObject(tilemap);
 
@@ -128,7 +128,7 @@ void SceneGame::Enter()
     uiView.setSize(windowX, windowY);
     uiView.setCenter(windowX * 0.5f, windowY * 0.5f);
 
-    Tilemap* tilemap = dynamic_cast<Tilemap*>(FindGameObject("Background"));
+    Tilemap* tilemap = dynamic_cast<Tilemap*>(FindGameObject("background"));
     tilemap->SetPosition( 0, 0);
     tilemap->SetOrigin(Origins::MC);
     player->SetPosition({ 0, 0 });
