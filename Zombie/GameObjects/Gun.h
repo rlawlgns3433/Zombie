@@ -14,10 +14,14 @@ protected:
 	bool availShoot = true;
 
 public:
-	unsigned gunCapacity;		// ÀüÃ¼ ÃÑ¾Ë ¼ö 
-	unsigned gunAmmo;			// ÇÑ ÅºÃ¢
-	unsigned currentAmmo;
-	float gunDelay;
+	static int gunCount;
+
+	unsigned gunCapacity = 100;	// ÀüÃ¼ ÃÑ¾Ë ¼ö 
+	unsigned gunAmmo = 6;		// ÇÑ ÅºÃ¢
+	unsigned currentAmmo = 6;
+	float gunDelay = 2.f;
+	float reloadDelay = 0.8f;
+	bool isReload = false;
 
 	Gun(const std::string& name = "");
 	~Gun() override				= default;
@@ -31,4 +35,3 @@ public:
 	void Fire();
 	void Reload();
 };
-

@@ -68,9 +68,9 @@ public :
 	virtual void SetName(std::string& name) { this->name = name; }
 
 	int GetSortLayer() const { return this->sortLayer; }
-	int SetSortLayer(int layer) { this->sortLayer = layer; }
-	int GetSortLayer() { return this->sortOrder; }
-	int SetSortOrder(int order) { this->sortOrder = order; }
+	void SetSortLayer(int layer) { this->sortLayer = layer; }
+	int GetSortOrder() { return this->sortOrder; }
+	void SetSortOrder(int order) { this->sortOrder = order; }
 
 	bool operator>(const GameObject& rhs) const;
 	bool operator<(const GameObject& rhs) const;

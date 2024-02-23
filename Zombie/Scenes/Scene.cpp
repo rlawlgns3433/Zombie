@@ -68,7 +68,7 @@ void Scene::Update(float dt)
 
 	for (GameObject* obj : resortingGameObjects)
 	{
-		auto it = std::find(gameObjects.cbegin(), gameObjects.cend(), obj);
+		auto it = std::find(gameObjects.begin(), gameObjects.end(), obj);
 		if (it != gameObjects.end())
 		{
 			gameObjects.remove(obj);
@@ -76,7 +76,7 @@ void Scene::Update(float dt)
 			continue;
 		}
 
-		it = std::find(uiGameObjects.cbegin(), uiGameObjects.cend(), obj);
+		it = std::find(uiGameObjects.begin(), uiGameObjects.end(), obj);
 		if (it != uiGameObjects.end())
 		{
 			uiGameObjects.remove(obj);

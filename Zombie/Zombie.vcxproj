@@ -148,6 +148,7 @@
     <ClCompile Include="GameObjects\HealthBox.cpp" />
     <ClCompile Include="GameObjects\Item.cpp" />
     <ClCompile Include="GameObjects\ItemSpawner.cpp" />
+    <ClCompile Include="GameObjects\HealthBar.cpp" />
     <ClCompile Include="Scenes\SceneSkillUp.cpp" />
     <ClCompile Include="Scenes\SceneTitle.cpp" />
     <ClCompile Include="GameObjects\SpriteGo.cpp" />
@@ -182,6 +183,7 @@
     <ClInclude Include="GameObjects\HealthBox.h" />
     <ClInclude Include="GameObjects\Item.h" />
     <ClInclude Include="GameObjects\ItemSpawner.h" />
+    <ClInclude Include="GameObjects\HealthBar.h" />
     <ClInclude Include="Scenes\SceneSkillUp.h" />
     <ClInclude Include="Scenes\SceneTitle.h" />
     <ClInclude Include="Framework\Singleton.h" />

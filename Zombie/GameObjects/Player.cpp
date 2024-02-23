@@ -16,6 +16,13 @@ void Player::Init()
 	SCENE_MANAGER.GetScene(SceneIDs::SceneGame)->AddGameObject(gun);
 
 	crossHair = dynamic_cast<CrossHair*>(SCENE_MANAGER.GetCurrentScene()->FindGameObject("crosshair"));
+
+	healthBar = new HealthBar("healthbar");
+	healthBar->SetFillColor(sf::Color::Red);
+	healthBar->SetPosition({FRAMEWORK.GetWindowSize().x * 0.5f, FRAMEWORK.GetWindowSize().y * 0.9f });
+	healthBar->SetOrigin(Origins::MC);
+	SCENE_MANAGER.GetScene(SceneIDs::SceneGame)->AddGameObject(healthBar, Layers::Ui);
+
 }
 
 void Player::Release()
@@ -58,7 +65,8 @@ void Player::Update(float dt)
 					{
 						if (Utils::MyMath::Distance(position, obj->GetPosition()) < 30.f)
 						{
-							hp -= 20; // 좀비 데미지 적용 필요
+							hp -= 20 * 4; // 좀비 데미지 적용 필요
+							healthBar->SetRectSize({ hp, healthBar->GetRectSize().y });
 							nowDamage = true;
 							time = 0;
 							return;

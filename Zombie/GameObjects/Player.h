@@ -2,8 +2,10 @@
 #include "SpriteGo.h"
 #include "CrossHair.h"
 #include "Gun.h"
+#include "HealthBar.h"
 
 class Gun;
+class HealthBar;
 
 class Player : public SpriteGo
 {
@@ -15,6 +17,7 @@ protected :
 
 	Gun* gun = nullptr;
 	CrossHair* crossHair = nullptr;
+	HealthBar* healthBar = nullptr;
 
 	sf::Vector2f direction = { 0.f ,0.f };
 	sf::Vector2f look = { 1.f, 0.f };
@@ -32,7 +35,7 @@ protected :
 public :
 	// protected로 변환 필요
 	float maxHp = 400.f;
-	float hp = maxHp;
+	float hp = 400.f;
 	float damageInterval = 1.f;
 	bool nowDamage = false;
 	float time = 0.f;

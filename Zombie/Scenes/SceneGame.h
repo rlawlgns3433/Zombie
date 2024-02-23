@@ -5,6 +5,8 @@ class Player;
 class ZombieSpawner;
 class ItemSpawner;
 class Zombie;
+class TextGo;
+class HealthBar;
 
 class SceneGame : public Scene
 {
@@ -13,13 +15,20 @@ protected :
 
 	std::vector<ZombieSpawner*> zombieSpawners;
 	std::vector<ItemSpawner*> itemSpawners;
-	std::vector<Zombie*> deadZombie;
+	std::list<Zombie*> deadZombie;
 
 	Player* player = nullptr;
+	TextGo* textScore = nullptr;
+	TextGo* textHighScore = nullptr;
+	TextGo* textAmmos = nullptr;
+	TextGo* textWave = nullptr;
+	TextGo* textZombieCount = nullptr;
+	TextGo* textGameover = nullptr;
+
+	HealthBar* healthBar = nullptr;
 
 	float windowX = 0.f;
 	float windowY = 0.f;
-
 	unsigned wave = 1;
 
 public :
@@ -45,5 +54,5 @@ public :
 	void Draw(sf::RenderWindow& window);
 
 	unsigned GetWave() const { return wave; }
-	void SetDeadZombie(Zombie* zombie);
+	void LoadZombieList(Zombie* zombie);
 };

@@ -7,7 +7,7 @@ unsigned HealthBox::amount = 40;
 
 HealthBox* HealthBox::Create(ItemType BulletType)
 {
-	HealthBox* healthBox = new HealthBox("healthbox" + std::to_string(healthboxCnt));
+	HealthBox* healthBox = new HealthBox("healthbox");
 	healthBox->type = BulletType;
 	healthBox->textureId = "graphics/health_pickup.png";
 	healthBox->amount = 40.f;
@@ -48,7 +48,7 @@ void HealthBox::Update(float dt)
 	{
 		SCENE_MANAGER.GetCurrentScene()->RemoveGameObject(this);
 
-		player->hp += amount;
+		player->hp += amount * 40;
 		if (player->hp > player->maxHp)
 		{
 			player->hp = player->maxHp;

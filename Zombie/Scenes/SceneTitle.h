@@ -25,7 +25,6 @@ public:
 	SceneTitle(SceneIDs id);
 	~SceneTitle() override					 = default;
 
-
 	void Init() override;
 	void Release() override;
 	virtual void Reset();

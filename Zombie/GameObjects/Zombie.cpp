@@ -28,6 +28,8 @@ Zombie* Zombie::Create(Types zombieType)
 		break;
 	}
 
+	dynamic_cast<SceneGame*>(SCENE_MANAGER.GetCurrentScene())->LoadZombieList(zombie);
+
 	return zombie;
 }
 
@@ -80,7 +82,7 @@ void Zombie::Update(float dt)
 
 				if (maxHp <= 0)
 				{
-					dynamic_cast<SceneGame*>(SCENE_MANAGER.GetCurrentScene())->SetDeadZombie(this);
+					dynamic_cast<SceneGame*>(SCENE_MANAGER.GetCurrentScene())->LoadZombieList(this);
 					speed = 0;
 					SetTexture("graphics/blood.png");
 					SetSortLayer(-1);
