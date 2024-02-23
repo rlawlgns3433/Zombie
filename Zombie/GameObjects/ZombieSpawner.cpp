@@ -51,11 +51,14 @@ void ZombieSpawner::Update(float dt)
 			Zombie::Types zombieType = zombieTypes[Utils::Random::RandomRange(0, zombieTypes.size())];
 
 			Zombie* zombie = Zombie::Create(zombieType);
-			zombie->Init();
-			zombie->Reset();
-			zombie->SetPosition(zombiePosition);
+			if (zombie != nullptr)
+			{
 
-			SCENE_MANAGER.GetCurrentScene()->AddGameObject(zombie);
+				zombie->Init();
+				zombie->Reset();
+				zombie->SetPosition(zombiePosition);
+				SCENE_MANAGER.GetCurrentScene()->AddGameObject(zombie);
+			}
 		}
 	}
 }

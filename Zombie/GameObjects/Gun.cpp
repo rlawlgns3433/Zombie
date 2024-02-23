@@ -67,9 +67,13 @@ void Gun::Fire()
 
 void Gun::Reload()
 {
-	if (gunCapacity > 0)
+	// 로직 수정 필요
+	if (currentGunCapacity > 0) // gunCapacity를 수정하면 안 됨
 	{
-		gunCapacity += currentAmmo;
+		currentGunCapacity += currentAmmo;
+
 		currentAmmo = gunAmmo;
+
+		currentGunCapacity -= gunAmmo;
 	}
 }

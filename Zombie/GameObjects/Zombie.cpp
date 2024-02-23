@@ -6,31 +6,35 @@ int Zombie::zombieCnt;
 
 Zombie* Zombie::Create(Types zombieType)
 {
-	Zombie* zombie = new Zombie("zombie" + std::to_string(zombieCnt++));
-	zombie->type = zombieType;
-
-	switch (zombieType)
+	if (zombieCnt < 10)
 	{
-	case Zombie::Types::Bloater:
-		zombie->textureId = "graphics/bloater.png";
-		zombie->maxHp = 40;
-		zombie->speed = 100;
-		break;
-	case Zombie::Types::Chaser:
-		zombie->textureId = "graphics/chaser.png";
-		zombie->maxHp = 70;
-		zombie->speed = 75;
-		break;
-	case Zombie::Types::Crawler:
-		zombie->textureId = "graphics/crawler.png";
-		zombie->maxHp = 20;
-		zombie->speed = 50;
-		break;
+		Zombie* zombie = new Zombie("zombie" + std::to_string(zombieCnt++));
+		zombie->type = zombieType;
+
+		switch (zombieType)
+		{
+		case Zombie::Types::Bloater:
+			zombie->textureId = "graphics/bloater.png";
+			zombie->maxHp = 40;
+			zombie->speed = 100;
+			break;
+		case Zombie::Types::Chaser:
+			zombie->textureId = "graphics/chaser.png";
+			zombie->maxHp = 70;
+			zombie->speed = 75;
+			break;
+		case Zombie::Types::Crawler:
+			zombie->textureId = "graphics/crawler.png";
+			zombie->maxHp = 20;
+			zombie->speed = 50;
+			break;
+		}
+
+		dynamic_cast<SceneGame*>(SCENE_MANAGER.GetCurrentScene())->LoadZombieList(zombie);
+
+		return zombie;
 	}
-
-	dynamic_cast<SceneGame*>(SCENE_MANAGER.GetCurrentScene())->LoadZombieList(zombie);
-
-	return zombie;
+	return nullptr;
 }
 
 Zombie::Zombie(const std::string& name)
@@ -56,11 +60,15 @@ void Zombie::Reset()
 	SpriteGo::Reset();
 
 	player = dynamic_cast<Player*>(SCENE_MANAGER.GetCurrentScene()->FindGameObject("player"));
+	tilemap = dynamic_cast<Tilemap*>(SCENE_MANAGER.GetCurrentScene()->FindGameObject("background"));
+	
 }
 
 void Zombie::Update(float dt)
 {
 	SpriteGo::Update(dt);
+
+
 
 	int bulletSize = SCENE_MANAGER.GetCurrentScene()->FindAll("bullet", bullets, Layers::World);
 
@@ -70,7 +78,22 @@ void Zombie::Update(float dt)
 		Utils::MyMath::Normalize(look);
 
 		SetRotation(Utils::MyMath::Angle(look));
-		SetPosition(Utils::Vector2::MoveTowards(position, player->GetPosition(), speed * dt));
+
+		sf::Vector2f pos = position + look * speed * dt;
+		if (tilemap != nullptr)
+		{
+			sf::FloatRect tilemapBounds = tilemap->GetGlobalBounds();
+			const sf::Vector2f tileSize = tilemap->GetCellSize();
+			tilemapBounds.left += tileSize.x;
+			tilemapBounds.top += tileSize.y;
+			tilemapBounds.width -= tileSize.x * 2.f;
+			tilemapBounds.height -= tileSize.y * 2.f;
+
+			pos.x = Utils::MyMath::Clamp(pos.x, tilemapBounds.left, tilemapBounds.left + tilemapBounds.width);
+			pos.y = Utils::MyMath::Clamp(pos.y, tilemapBounds.top, tilemapBounds.top + tilemapBounds.height);
+		}
+
+		SetPosition(pos);
 
 		for (auto& b : bullets)
 		{

@@ -16,9 +16,12 @@ protected:
 public:
 	static int gunCount;
 
-	unsigned gunCapacity = 100;	// ÀüÃ¼ ÃÑ¾Ë ¼ö 
+	unsigned gunCapacity = 6;	// ÀüÃ¼ ÃÑ¾Ë ¼ö 
+	unsigned currentGunCapacity = 6;
 	unsigned gunAmmo = 6;		// ÇÑ ÅºÃ¢
-	unsigned currentAmmo = 6;
+	unsigned currentAmmo = 6; // ³» ÇöÀç ÅºÃ¢
+
+
 	float gunDelay = 2.f;
 	float reloadDelay = 0.8f;
 	bool isReload = false;

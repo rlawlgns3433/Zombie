@@ -1,8 +1,10 @@
 #pragma once
 #include "SpriteGo.h"
 #include "Player.h"
+#include "Tilemap.h"
 
 class Player;
+class Tilemap;
 
 class Zombie : public SpriteGo
 {
@@ -27,7 +29,8 @@ protected :
 
 	std::list<GameObject*> bullets;
 
-	Player* player;
+	Tilemap* tilemap = nullptr;
+	Player* player = nullptr;
 	Types type = Types::None;
 
 	sf::Vector2f look = { 1.f, 0.f };

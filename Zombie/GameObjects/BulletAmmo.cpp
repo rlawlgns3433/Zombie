@@ -46,7 +46,7 @@ void BulletAmmo::Update(float dt)
 	if (Utils::MyMath::Distance(position, player->GetPosition()) < 50.f)
 	{
 		SCENE_MANAGER.GetCurrentScene()->RemoveGameObject(this);
-		gun->gunCapacity += amount;
+		gun->currentGunCapacity += amount;
 	}
 }
 
