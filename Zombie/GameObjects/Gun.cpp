@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "Gun.h"
+#include "SceneGame.h"
 
 int Gun::gunCount = 0;
 
@@ -11,6 +12,19 @@ Gun::Gun(const std::string& name)
 void Gun::Init()
 {
 	GameObject::Init();
+
+	time = 0.f;
+	availShoot = true;
+	gunCapacity = 6;	// ÀüÃ¼ ÃÑ¾Ë ¼ö 
+	currentGunCapacity = 6;
+	gunAmmo = 6;		// ÇÑ ÅºÃ¢
+	currentAmmo = 6; // ³» ÇöÀç ÅºÃ¢
+
+	gunDelay = 2.f;
+	reloadDelay = 0.8f;
+	isReload = false;
+
+
 }
 
 void Gun::Release()
@@ -21,6 +35,20 @@ void Gun::Release()
 void Gun::Reset()
 {
 	GameObject::Reset();
+	time = 0.f;
+	availShoot = true;
+	gunCapacity = 6;	// ÀüÃ¼ ÃÑ¾Ë ¼ö 
+	currentGunCapacity = 6;
+	gunAmmo = 6;		// ÇÑ ÅºÃ¢
+	currentAmmo = 6; // ³» ÇöÀç ÅºÃ¢
+
+
+	gunDelay = 2.f;
+	reloadDelay = 0.8f;
+	isReload = false;
+
+	sceneGame = dynamic_cast<SceneGame*>(SCENE_MANAGER.GetCurrentScene());
+	player = dynamic_cast<Player*>(SCENE_MANAGER.GetCurrentScene()->FindGameObject("player"));
 }
 
 void Gun::Update(float dt)
@@ -56,8 +84,10 @@ void Gun::Fire()
 	if (availShoot && currentAmmo > 0)
 	{
 		Bullet* bullet = new Bullet("bullet");
-		bullet->direction = SCENE_MANAGER.GetCurrentScene()->ScreenToWorld((sf::Vector2i)(InputManager::GetMousePos() - SCENE_MANAGER.GetCurrentScene()->FindGameObject("player")->GetPosition()));
-		SCENE_MANAGER.GetCurrentScene()->AddGameObject(bullet);
+		bullet->Init();
+		bullet->Reset();
+		bullet->direction = SCENE_MANAGER.GetCurrentScene()->ScreenToWorld((sf::Vector2i)(InputManager::GetMousePos() - player->GetPosition()));
+		sceneGame->AddGameObject(bullet);
 
 		availShoot = false;
 		--currentAmmo;

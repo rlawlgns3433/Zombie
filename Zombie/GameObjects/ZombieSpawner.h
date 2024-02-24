@@ -1,6 +1,9 @@
 #pragma once
 #include "GameObject.h"
 #include "Zombie.h"
+#include "SceneGame.h"
+
+class SceneGame;
 
 class ZombieSpawner : public GameObject
 {
@@ -9,6 +12,8 @@ protected :
 	ZombieSpawner(ZombieSpawner&&)				   = delete;
 	ZombieSpawner& operator=(const ZombieSpawner&) = delete;
 	ZombieSpawner& operator=(ZombieSpawner&&)	   = delete;
+
+	SceneGame* sceneGame = nullptr;
 
 	std::vector<Zombie::Types> zombieTypes;
 

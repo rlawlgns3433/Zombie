@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "Bullet.h"
-
+#include "SceneGame.h"
+#include "Zombie.h"
 
 Bullet::Bullet(const std::string& name)
     : GameObject(name)
@@ -16,6 +17,7 @@ void Bullet::Init()
     GameObject::Init();
     player = dynamic_cast<Player*>(SCENE_MANAGER.GetCurrentScene()->FindGameObject("player"));
     crossHair = dynamic_cast<CrossHair*>(SCENE_MANAGER.GetCurrentScene()->FindGameObject("crosshair"));
+    sceneGame = dynamic_cast<SceneGame*>(SCENE_MANAGER.GetCurrentScene());
 }
 
 void Bullet::Release()
@@ -26,20 +28,44 @@ void Bullet::Release()
 void Bullet::Reset()
 {
     GameObject::Reset();
+    sceneGame = dynamic_cast<SceneGame*>(SCENE_MANAGER.GetCurrentScene());
 }
 
 void Bullet::Update(float dt)
 {
     GameObject::Update(dt);
 
-    shape.setPosition(Utils::Vector2::MoveTowards(
-        shape.getPosition(),
-        direction * 3000.f,
-        speed * dt));
+    shape.setPosition(Utils::Vector2::MoveTowards(shape.getPosition(), direction * 3000.f,speed * dt));
 
-    if (Utils::MyMath::Distance(shape.getPosition(), SCENE_MANAGER.GetCurrentScene()->FindGameObject("player")->GetPosition()) > 1000.f)
+    if (sceneGame != nullptr)
     {
-        SCENE_MANAGER.GetCurrentScene()->RemoveGameObject(this);
+        if (!sceneGame->IsInTilemap(position))
+        {
+            SetActive(false);
+            sceneGame->RemoveGameObject(this);
+        }
+    }
+}
+
+void Bullet::FixedUpdate(float dt)
+{
+    auto& list = sceneGame->GetZombieList();
+    for (auto& obj : list)
+    {
+        if (dynamic_cast<Zombie*>(obj)->IsDead()) continue;
+
+        if (GetGlobalBounds().intersects(obj->GetGlobalBounds()))
+        {
+            SetActive(false);
+            sceneGame->RemoveGameObject(this);
+
+            Zombie* zombie = dynamic_cast<Zombie*>(obj);
+            if (zombie != nullptr)
+            {
+                zombie->OnDamage(damage);
+            }
+            break;
+        }
     }
 }
 

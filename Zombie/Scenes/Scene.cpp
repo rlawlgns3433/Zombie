@@ -66,9 +66,30 @@ void Scene::Update(float dt)
 		}
 	}
 
+
+}
+
+void Scene::LateUpdate(float dt)
+{
+	for (GameObject* obj : gameObjects)
+	{
+		if (obj->GetActive())
+		{
+			obj->LateUpdate(dt);
+		}
+	}
+
+	for (GameObject* obj : uiGameObjects)
+	{
+		if (obj->GetActive())
+		{
+			obj->LateUpdate(dt);
+		}
+	}
+
 	for (GameObject* obj : resortingGameObjects)
 	{
-		auto it = std::find(gameObjects.begin(), gameObjects.end(), obj);
+		auto it = std::find(gameObjects.cbegin(), gameObjects.cend(), obj);
 		if (it != gameObjects.end())
 		{
 			gameObjects.remove(obj);
@@ -76,7 +97,7 @@ void Scene::Update(float dt)
 			continue;
 		}
 
-		it = std::find(uiGameObjects.begin(), uiGameObjects.end(), obj);
+		it = std::find(uiGameObjects.cbegin(), uiGameObjects.cend(), obj);
 		if (it != uiGameObjects.end())
 		{
 			uiGameObjects.remove(obj);
@@ -97,6 +118,14 @@ void Scene::Update(float dt)
 	}
 
 	removeGameObjects.clear();
+}
+
+void Scene::FixedUpdate(float dt)
+{
+	for (GameObject* obj : gameObjects)
+	{
+		obj->FixedUpdate(dt);
+	}
 }
 
 void Scene::Draw(sf::RenderWindow& window)
@@ -308,12 +337,18 @@ void Scene::RemoveGameObject(GameObject* gameObject)
 
 void Scene::RemoveGameObject(std::string name)
 {
-	removeGameObjects.push_back(FindGameObject(name));
+	if (std::find(removeGameObjects.begin(), removeGameObjects.end(), FindGameObject(name)) == removeGameObjects.end())
+	{
+		removeGameObjects.push_back(FindGameObject(name));
+	}
 }
 
 void Scene::ResortGameObject(GameObject* obj)
 {
-	resortingGameObjects.push_back(obj);
+	if (std::find(resortingGameObjects.begin(), resortingGameObjects.end(), obj) == resortingGameObjects.end())
+	{
+		resortingGameObjects.push_back(obj);
+	}
 }
 
 sf::Vector2f Scene::ScreenToWorld(sf::Vector2i screenPosition)

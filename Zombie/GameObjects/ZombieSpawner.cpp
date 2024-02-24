@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "ZombieSpawner.h"
+#include "SceneGame.h"
 
 ZombieSpawner::ZombieSpawner(const std::string& name)
 	: GameObject(name)
@@ -33,7 +34,7 @@ void ZombieSpawner::Reset()
 	spawnCount = 2;
 	radius = 250.f;
 
-
+	sceneGame = dynamic_cast<SceneGame*>(SCENE_MANAGER.GetCurrentScene());
 }
 
 void ZombieSpawner::Update(float dt)
@@ -47,16 +48,22 @@ void ZombieSpawner::Update(float dt)
 
 		for (int i = 0; i < spawnCount; ++i)
 		{
-			sf::Vector2f zombiePosition = position + Utils::Random::RandomInUnitCircle() * radius;
 			Zombie::Types zombieType = zombieTypes[Utils::Random::RandomRange(0, zombieTypes.size())];
 
 			Zombie* zombie = Zombie::Create(zombieType);
 			if (zombie != nullptr)
 			{
-
 				zombie->Init();
 				zombie->Reset();
+				sf::Vector2f zombiePosition = position + Utils::Random::RandomInUnitCircle() * radius;
+
+				if (sceneGame != nullptr)
+				{
+					zombiePosition = sceneGame->ClampByTilemap(zombiePosition);
+				}
+
 				zombie->SetPosition(zombiePosition);
+
 				SCENE_MANAGER.GetCurrentScene()->AddGameObject(zombie);
 			}
 		}

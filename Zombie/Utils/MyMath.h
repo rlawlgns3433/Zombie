@@ -14,5 +14,7 @@ namespace Utils
 		static float Rad2Deg(float radian);
 		static float Deg2Rad(float degree);
 		static float Clamp(float value, float min, float max);
+		static sf::Vector2f Clamp(const sf::Vector2f& vector, const sf::FloatRect& rect);
+		static sf::FloatRect ResizeRect(const sf::FloatRect& rect, const sf::Vector2f& delta);
 	};
 }

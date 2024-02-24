@@ -45,7 +45,7 @@ void SceneGame::Init()
     player = new Player("player");
     AddGameObject(player);
 
-    Tilemap* tilemap = new Tilemap("background");
+    tilemap = new Tilemap("background");
     tilemap->sortLayer = -1.f;
     AddGameObject(tilemap);
 
@@ -144,6 +144,7 @@ void SceneGame::Exit()
 
 void SceneGame::Update(float dt)
 {
+
     Scene::Update(dt);
     SetStatus(status);
 
@@ -176,6 +177,8 @@ void SceneGame::UpdateAwake(float dt)
 
 void SceneGame::UpdateGame(float dt)
 {
+    FindAll("zombie", zombieList, Layers::World);
+
     worldView.setCenter(player->GetPosition());
 
     if (InputManager::GetKeyDown(sf::Keyboard::Escape))
@@ -220,4 +223,20 @@ void SceneGame::LoadZombieList(Zombie* zombie)
     {
         deadZombie.push_back(zombie);
     }
+}
+
+sf::Vector2f SceneGame::ClampByTilemap(const sf::Vector2f& point)
+{
+    sf::FloatRect rect = tilemap->GetGlobalBounds();
+    rect = Utils::MyMath::ResizeRect(rect, tilemap->GetCellSize() * -2.f);
+    return Utils::MyMath::Clamp(point, rect);
+}
+
+bool SceneGame::IsInTilemap(const sf::Vector2f& point)
+{
+    sf::FloatRect rect = tilemap->GetGlobalBounds();
+    rect = Utils::MyMath::ResizeRect(rect, tilemap->GetCellSize() * -2.f);
+    // 사각형 영역
+
+    return rect.contains(point);
 }

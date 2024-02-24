@@ -68,6 +68,16 @@ void SceneManager::Update(float dt)
 	scenes[(int)currentScene]->Update(dt);
 }
 
+void SceneManager::LateUpdate(float dt)
+{
+	scenes[(int)currentScene]->LateUpdate(dt);
+}
+
+void SceneManager::FixeUpdate(float dt)
+{
+	scenes[(int)currentScene]->FixedUpdate(dt);
+}
+
 void SceneManager::Draw(sf::RenderWindow& window)
 {
 	scenes[(int)currentScene]->Draw(window);

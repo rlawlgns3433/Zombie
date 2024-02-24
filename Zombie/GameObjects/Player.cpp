@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "Player.h"
+#include "SceneGame.h"
 
 Player::Player(const std::string& name)
 	: SpriteGo(name)
@@ -13,6 +14,8 @@ void Player::Init()
 	SetOrigin(Origins::MC);
 
 	gun = new Gun("gun");
+	gun->Init();
+	gun->Reset();
 	SCENE_MANAGER.GetScene(SceneIDs::SceneGame)->AddGameObject(gun);
 
 	crossHair = dynamic_cast<CrossHair*>(SCENE_MANAGER.GetCurrentScene()->FindGameObject("crosshair"));
@@ -33,10 +36,12 @@ void Player::Release()
 void Player::Reset()
 {
 	SpriteGo::Reset();
-
-	tilemap = dynamic_cast<Tilemap*>(SCENE_MANAGER.GetCurrentScene()->FindGameObject("background"));
-
+	sceneGame = dynamic_cast<SceneGame*>(SCENE_MANAGER.GetCurrentScene());
 	SetPosition({ 0, 0 });
+
+	invincibleTime = 1.f;
+	invincibleTimer = 0.f;
+
 }
 
 void Player::Update(float dt)
@@ -51,12 +56,6 @@ void Player::Update(float dt)
 		break;
 	case GameStatus::Game:
 	{
-
-		if (InputManager::GetMouseButton(sf::Mouse::Left))
-		{
-			gun->Fire();
-		}
-
 		sf::Vector2i mousePosition = (sf::Vector2i)InputManager::GetMousePos();
 		sf::Vector2f mouseWorldPosition = SCENE_MANAGER.GetCurrentScene()->ScreenToWorld(mousePosition);
 
@@ -74,44 +73,26 @@ void Player::Update(float dt)
 		}
 
 		sf::Vector2f pos = position + direction * speed * dt;
-		if (tilemap != nullptr)
+		if (sceneGame != nullptr)
 		{
-			sf::FloatRect tilemapBounds = tilemap->GetGlobalBounds();
-			const sf::Vector2f tileSize = tilemap->GetCellSize();
-			tilemapBounds.left += tileSize.x;
-			tilemapBounds.top += tileSize.y;
-			tilemapBounds.width -= tileSize.x * 2.f;
-			tilemapBounds.height -= tileSize.y * 2.f;
-
-			pos.x = Utils::MyMath::Clamp(pos.x, tilemapBounds.left, tilemapBounds.left + tilemapBounds.width);
-			pos.y = Utils::MyMath::Clamp(pos.y, tilemapBounds.top, tilemapBounds.top + tilemapBounds.height);
+			pos = sceneGame->ClampByTilemap(pos);
 		}
-
 		SetPosition(pos);
 
-		if (time > damageInterval)
+
+		if (InputManager::GetMouseButton(sf::Mouse::Left))
 		{
-			if (!nowDamage)
+			gun->Fire();
+		}
+
+		healthBar->SetRectSize({ hp, healthBar->GetRectSize().y });
+
+		if (isInvincible)
+		{
+			invincibleTimer += dt;
+			if (invincibleTimer > invincibleTime)
 			{
-				for (int i = 0; i < Zombie::zombieCnt; ++i)
-				{
-					GameObject* obj = SCENE_MANAGER.GetCurrentScene()->FindGameObject("zombie" + std::to_string(i));
-					if (obj != nullptr)
-					{
-						if (Utils::MyMath::Distance(position, obj->GetPosition()) < 30.f)
-						{
-							hp -= 20 * 4; // 좀비 데미지 적용 필요
-							healthBar->SetRectSize({ hp, healthBar->GetRectSize().y });
-							nowDamage = true;
-							time = 0;
-							return;
-						}
-					}
-				}
-			}
-			else
-			{
-				nowDamage = false;
+				isInvincible = false;
 			}
 		}
 
@@ -122,6 +103,14 @@ void Player::Update(float dt)
 	case GameStatus::Pause:
 		break;
 	}
+}
+
+void Player::LateUpdate(float dt)
+{
+}
+
+void Player::FixedUpdate(float dt)
+{
 
 
 }
@@ -129,4 +118,28 @@ void Player::Update(float dt)
 void Player::Draw(sf::RenderWindow& window)
 {
 	SpriteGo::Draw(window);
+}
+
+void Player::OnDamage(int damage)
+{
+	if (isDead || isInvincible) return;
+
+	hp -= damage;
+	isInvincible = true;
+	invincibleTimer = 0.f;
+
+	if (hp <= 0)
+	{
+		hp = 0;
+		OnDie();
+	}
+}
+
+void Player::OnDie()
+{
+	if (isDead)
+		return;
+
+	isDead = false;
+	sceneGame->SetStatus(GameStatus::GameOver);
 }

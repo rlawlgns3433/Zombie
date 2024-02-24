@@ -4,10 +4,12 @@
 #include "Gun.h"
 #include "HealthBar.h"
 #include "Tilemap.h"
+#include "SceneGame.h"
 
 class Gun;
 class HealthBar;
 class Tilemap;
+class SceneGame;
 
 class Player : public SpriteGo
 {
@@ -17,7 +19,7 @@ protected :
 	Player& operator=(const Player&)	= delete;
 	Player& operator=(Player&&)			= delete;
 
-	Tilemap* tilemap = nullptr;
+	SceneGame* sceneGame = nullptr;
 
 	Gun* gun = nullptr;
 	CrossHair* crossHair = nullptr;
@@ -28,20 +30,17 @@ protected :
 	
 	std::string textureId = "graphics/player.png";
 
-	float speed = 500.f;
+	float speed = 300.f;
 	bool isMoving = false;
-
-	int cellCountX;
-	int cellCountY;
-	int cellSizeX;
-	int cellSizeY;
 
 public :
 	// protected로 변환 필요
 	float maxHp = 400.f;
 	float hp = 400.f;
-	float damageInterval = 1.f;
-	bool nowDamage = false;
+	float invincibleTime = 1.f;
+	float invincibleTimer = 0.f;
+	bool isInvincible = false;
+	bool isDead = false;
 	float time = 0.f;
 
 	Player(const std::string & name = "");
@@ -51,8 +50,17 @@ public :
 	void Release() override;
 	void Reset() override;
 	void Update(float dt) override;
+	void LateUpdate(float dt) override;
+	void FixedUpdate(float dt) override;
 	void Draw(sf::RenderWindow& window) override;
 
 	void SetSpeed(float speed) { this->speed = speed; }
 	void AddSpeed(float addSpeed) { this->speed += addSpeed; }
+	const sf::Vector2f GetLook() const { return look; }
+
+	void SetInvincible(bool invincible) { this->isInvincible = invincible; }
+	bool GetInvincible() const { return this->isInvincible; }
+
+	void OnDamage(int damage);
+	void OnDie();
 };

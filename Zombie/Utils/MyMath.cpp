@@ -60,4 +60,19 @@ namespace Utils
 		if (value > max) return max;
 		return value;
 	}
+	sf::Vector2f MyMath::Clamp(const sf::Vector2f& vector, const sf::FloatRect& rect)
+	{
+		return sf::Vector2f(Clamp(vector.x, rect.left, rect.left + rect.width), Clamp(vector.y, rect.top, rect.top + rect.height));
+	}
+	sf::FloatRect MyMath::ResizeRect(const sf::FloatRect& rect, const sf::Vector2f& delta)
+	{
+		sf::FloatRect newRect = rect;
+		newRect.width += delta.x;
+		newRect.height += delta.y;
+
+		newRect.left -= delta.x * 0.5f;
+		newRect.top -= delta.y * 0.5f;
+
+		return newRect;
+	}
 }

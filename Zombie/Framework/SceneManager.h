@@ -49,6 +49,8 @@ public:
 	void LoadAllResources();
 	void ChangeScene(SceneIDs id);
 	void Update(float dt);
+	void LateUpdate(float dt);
+	void FixeUpdate(float dt);
 	void Draw(sf::RenderWindow& window);
 };
 

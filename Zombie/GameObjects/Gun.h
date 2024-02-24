@@ -1,6 +1,10 @@
 #pragma once
 #include "GameObject.h"
 #include "Bullet.h"
+#include "Player.h"
+
+class SceneGame;
+class Player;
 
 class Gun : public GameObject
 {
@@ -9,6 +13,9 @@ protected:
 	Gun(Gun&&)					= delete;
 	Gun& operator=(const Gun&)  = delete;
 	Gun& operator=(Gun&&)		= delete;
+
+	SceneGame* sceneGame = nullptr;
+	Player* player = nullptr;
 
 	float time = 0.f;
 	bool availShoot = true;

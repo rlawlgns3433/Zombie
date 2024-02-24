@@ -10,17 +10,19 @@ HealthBar::HealthBar(const std::string& name)
 
 void HealthBar::Update(float dt)
 {
-
+	GameObject::Update(dt);
 }
 
 void HealthBar::Reset()
 {
+	GameObject::Reset();
 	rectCurrentSize = rectSize;
 	SetRectSize(rectCurrentSize);
 }
 
 void HealthBar::Draw(sf::RenderWindow& window)
 {
+	GameObject::Draw(window);
 	window.draw(rectShape);
 }
 

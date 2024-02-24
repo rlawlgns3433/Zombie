@@ -8,7 +8,7 @@ Zombie* Zombie::Create(Types zombieType)
 {
 	if (zombieCnt < 10)
 	{
-		Zombie* zombie = new Zombie("zombie" + std::to_string(zombieCnt++));
+		Zombie* zombie = new Zombie("zombie");
 		zombie->type = zombieType;
 
 		switch (zombieType)
@@ -17,21 +17,26 @@ Zombie* Zombie::Create(Types zombieType)
 			zombie->textureId = "graphics/bloater.png";
 			zombie->maxHp = 40;
 			zombie->speed = 100;
+			zombie->damage = 20;
+			zombie->attackInterval = 1.f;
 			break;
 		case Zombie::Types::Chaser:
 			zombie->textureId = "graphics/chaser.png";
 			zombie->maxHp = 70;
 			zombie->speed = 75;
+			zombie->damage = 30;
+			zombie->attackInterval = 1.5f;
 			break;
 		case Zombie::Types::Crawler:
 			zombie->textureId = "graphics/crawler.png";
 			zombie->maxHp = 20;
 			zombie->speed = 50;
+			zombie->damage = 15;
+			zombie->attackInterval = 0.7f;
 			break;
 		}
 
-		dynamic_cast<SceneGame*>(SCENE_MANAGER.GetCurrentScene())->LoadZombieList(zombie);
-
+		++zombieCnt;
 		return zombie;
 	}
 	return nullptr;
@@ -61,58 +66,46 @@ void Zombie::Reset()
 
 	player = dynamic_cast<Player*>(SCENE_MANAGER.GetCurrentScene()->FindGameObject("player"));
 	tilemap = dynamic_cast<Tilemap*>(SCENE_MANAGER.GetCurrentScene()->FindGameObject("background"));
-	
+	sceneGame = dynamic_cast<SceneGame*>(SCENE_MANAGER.GetCurrentScene());
+
+	isDead = false;
+	hp = maxHp;
+	attackTimer = attackInterval;
 }
 
 void Zombie::Update(float dt)
 {
 	SpriteGo::Update(dt);
 
-
-
 	int bulletSize = SCENE_MANAGER.GetCurrentScene()->FindAll("bullet", bullets, Layers::World);
 
-	if (maxHp > 0)
+	if (isDead) return;
+
+	look = player->GetPosition() - position;
+	Utils::MyMath::Normalize(look);
+
+	SetRotation(Utils::MyMath::Angle(look));
+
+	sf::Vector2f pos = position + look * speed * dt;
+	if (sceneGame != nullptr)
 	{
-		sf::Vector2f look = player->GetPosition() - position;
-		Utils::MyMath::Normalize(look);
+		pos = sceneGame->ClampByTilemap(pos);
+	}
 
-		SetRotation(Utils::MyMath::Angle(look));
+	SetPosition(pos);
+}
 
-		sf::Vector2f pos = position + look * speed * dt;
-		if (tilemap != nullptr)
+void Zombie::FixedUpdate(float dt)
+{
+	attackTimer += dt;
+
+	if (attackTimer > attackInterval)
+	{
+		if (GetGlobalBounds().intersects(player->GetGlobalBounds()))
 		{
-			sf::FloatRect tilemapBounds = tilemap->GetGlobalBounds();
-			const sf::Vector2f tileSize = tilemap->GetCellSize();
-			tilemapBounds.left += tileSize.x;
-			tilemapBounds.top += tileSize.y;
-			tilemapBounds.width -= tileSize.x * 2.f;
-			tilemapBounds.height -= tileSize.y * 2.f;
-
-			pos.x = Utils::MyMath::Clamp(pos.x, tilemapBounds.left, tilemapBounds.left + tilemapBounds.width);
-			pos.y = Utils::MyMath::Clamp(pos.y, tilemapBounds.top, tilemapBounds.top + tilemapBounds.height);
-		}
-
-		SetPosition(pos);
-
-		for (auto& b : bullets)
-		{
-			if (Utils::MyMath::Distance(position, dynamic_cast<Bullet*>(b)->GetPosition()) < 20.f)
-			{
-				SCENE_MANAGER.GetCurrentScene()->RemoveGameObject(b);
-
-				maxHp -= dynamic_cast<Bullet*>(b)->GetDamage();
-
-				if (maxHp <= 0)
-				{
-					dynamic_cast<SceneGame*>(SCENE_MANAGER.GetCurrentScene())->LoadZombieList(this);
-					speed = 0;
-					SetTexture("graphics/blood.png");
-					SetSortLayer(-1);
-					SCENE_MANAGER.GetCurrentScene()->ResortGameObject(this);
-				}
-				return;
-			}
+			player->OnDamage(damage);
+			player->SetInvincible(true);
+			attackTimer = 0.f;
 		}
 	}
 }
@@ -120,4 +113,31 @@ void Zombie::Update(float dt)
 void Zombie::Draw(sf::RenderWindow& window)
 {
 	SpriteGo::Draw(window);
+}
+
+void Zombie::OnDamage(int damage)
+{
+	if (isDead) return;
+
+	hp -= damage;
+	if (hp <= 0)
+	{
+		hp = 0;
+		OnDie();
+	}
+}
+
+void Zombie::OnDie()
+{
+	if (isDead) return;
+
+	isDead = true;
+	speed = 0;
+	damage = 0;
+	SetTexture("graphics/blood.png");
+	SetSortLayer(-1);
+	SCENE_MANAGER.GetCurrentScene()->ResortGameObject(this);
+
+	//SetActive(false);
+	//sceneGame->RemoveGameObject(this); 씬 변경 시 처리
 }

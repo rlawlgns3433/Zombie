@@ -7,6 +7,8 @@ class ItemSpawner;
 class Zombie;
 class TextGo;
 class HealthBar;
+class Tilemap;
+
 
 class SceneGame : public Scene
 {
@@ -16,6 +18,10 @@ protected :
 	std::vector<ZombieSpawner*> zombieSpawners;
 	std::vector<ItemSpawner*> itemSpawners;
 	std::list<Zombie*> deadZombie;
+
+	std::list<GameObject*> zombieList;
+
+	Tilemap* tilemap = nullptr;
 
 	Player* player = nullptr;
 	TextGo* textScore = nullptr;
@@ -40,7 +46,7 @@ public :
 	SceneGame& operator=(const SceneGame&)	= delete;
 	SceneGame& operator=(SceneGame&&)		= delete;
 
-	// SceneDev1을(를) 통해 상속됨
+	// SceneDev1을(를) 통해 상속됨 
 	void Init() override;
 	void Release() override;
 	virtual void Reset();
@@ -55,4 +61,7 @@ public :
 
 	unsigned GetWave() const { return wave; }
 	void LoadZombieList(Zombie* zombie);
+	sf::Vector2f ClampByTilemap(const sf::Vector2f& point);
+	bool IsInTilemap(const sf::Vector2f& point);
+	const std::list<GameObject*>& GetZombieList() const { return zombieList; }
 };

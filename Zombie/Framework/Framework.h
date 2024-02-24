@@ -26,7 +26,10 @@ public :
 	sf::Time realDeltaTime;
 	sf::Time deltaTime;
 
+	sf::Time fixedDeltaTime;
+
 	float timeScale = 1.f;
+	float fixedUpdateTime = 1.f / 50.f;
 
 public:
 	sf::RenderWindow& GetWindow() { return window; } // 조심할 필요가 있음

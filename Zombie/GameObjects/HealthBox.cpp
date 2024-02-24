@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "Item.h"
 #include "HealthBox.h"
+#include "HealthBar.h"
 
 int HealthBox::healthboxCnt;
 unsigned HealthBox::amount = 40;
@@ -38,6 +39,7 @@ void HealthBox::Reset()
 	Item::Reset();
 
 	player = dynamic_cast<Player*>(SCENE_MANAGER.GetCurrentScene()->FindGameObject("player"));
+	healthBar = dynamic_cast<HealthBar*>(SCENE_MANAGER.GetCurrentScene()->FindGameObject("healthbar"));
 }
 
 void HealthBox::Update(float dt)
@@ -48,11 +50,12 @@ void HealthBox::Update(float dt)
 	{
 		SCENE_MANAGER.GetCurrentScene()->RemoveGameObject(this);
 
-		player->hp += amount * 40;
+		player->hp += amount * 4;
 		if (player->hp > player->maxHp)
 		{
 			player->hp = player->maxHp;
 		}
+		healthBar->SetRectSize({ player->hp, healthBar->GetCurrentRectSize().y });
 	}
 }
 
