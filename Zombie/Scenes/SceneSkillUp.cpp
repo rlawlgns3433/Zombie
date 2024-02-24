@@ -70,12 +70,12 @@ void SceneSkillUp::Update(float dt)
 
 	if (InputManager::GetKeyDown(sf::Keyboard::Num1) || InputManager::GetKeyDown(sf::Keyboard::Numpad1))
 	{
-		gun->gunDelay -= 0.2f;
+		gun->SetGunDelay(gun->GetGunDelay() - 0.2f);
 		SCENE_MANAGER.ChangeScene(SceneIDs::SceneGame);
 	}
 	else if (InputManager::GetKeyDown(sf::Keyboard::Num2) || InputManager::GetKeyDown(sf::Keyboard::Numpad2))
 	{
-		gun->gunAmmo += 6;
+		gun->AddGunAmmo(6);
 		SCENE_MANAGER.ChangeScene(SceneIDs::SceneGame);
 	}
 	else if (InputManager::GetKeyDown(sf::Keyboard::Num3) || InputManager::GetKeyDown(sf::Keyboard::Numpad3))

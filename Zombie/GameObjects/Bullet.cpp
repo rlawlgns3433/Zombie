@@ -39,7 +39,7 @@ void Bullet::Update(float dt)
 
     if (sceneGame != nullptr)
     {
-        if (!sceneGame->IsInTilemap(position))
+        if (!sceneGame->IsInTilemap(shape.getPosition()))
         {
             SetActive(false);
             sceneGame->RemoveGameObject(this);

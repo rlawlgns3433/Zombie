@@ -103,20 +103,6 @@ void SceneGame::Release()
 
 void SceneGame::Reset()
 {
-    for (GameObject* obj : deadZombie)
-    {
-        RemoveGameObject(obj);
-    }
-
-    for (GameObject* obj : gameObjects)
-    {
-        if (obj->GetName() == "healthbox" || obj->GetName() == "ammoItem")
-        {
-            RemoveGameObject(obj);
-        }
-    }
-
-    player->hp = player->maxHp;
 }
 
 void SceneGame::Enter()
@@ -132,14 +118,26 @@ void SceneGame::Enter()
     tilemap->SetPosition( 0, 0);
     tilemap->SetOrigin(Origins::MC);
     player->SetPosition({ 0, 0 });
-
-    Reset();
+    player->hp = player->maxHp;
 }
 
 void SceneGame::Exit()
 {
     Scene::Exit();
 	FRAMEWORK.SetTimeScale(1.f);
+
+    for (GameObject* obj : zombieList)
+    {
+        RemoveGameObject(obj);
+    }
+
+    for (GameObject* obj : gameObjects)
+    {
+        if (obj->GetName() == "healthbox" || obj->GetName() == "ammoItem")
+        {
+            RemoveGameObject(obj);
+        }
+    }
 }
 
 void SceneGame::Update(float dt)
@@ -172,6 +170,7 @@ void SceneGame::UpdateAwake(float dt)
     if (InputManager::GetKeyDown(sf::Keyboard::Enter))
     {
         status = GameStatus::Game;
+        Reset();
     }
 }
 

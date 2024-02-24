@@ -18,7 +18,6 @@ public :
 		Crawler,
 		Count,
 	};
-	static int zombieCnt;
 	static const int totalTypes = 3;
 	static Zombie* Create(Types zombieType = Types::None);
 

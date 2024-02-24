@@ -2,44 +2,38 @@
 #include "Zombie.h"
 #include "SceneGame.h"
 
-int Zombie::zombieCnt;
-
 Zombie* Zombie::Create(Types zombieType)
 {
-	if (zombieCnt < 10)
+
+	Zombie* zombie = new Zombie("zombie");
+	zombie->type = zombieType;
+
+	switch (zombieType)
 	{
-		Zombie* zombie = new Zombie("zombie");
-		zombie->type = zombieType;
-
-		switch (zombieType)
-		{
-		case Zombie::Types::Bloater:
-			zombie->textureId = "graphics/bloater.png";
-			zombie->maxHp = 40;
-			zombie->speed = 100;
-			zombie->damage = 20;
-			zombie->attackInterval = 1.f;
-			break;
-		case Zombie::Types::Chaser:
-			zombie->textureId = "graphics/chaser.png";
-			zombie->maxHp = 70;
-			zombie->speed = 75;
-			zombie->damage = 30;
-			zombie->attackInterval = 1.5f;
-			break;
-		case Zombie::Types::Crawler:
-			zombie->textureId = "graphics/crawler.png";
-			zombie->maxHp = 20;
-			zombie->speed = 50;
-			zombie->damage = 15;
-			zombie->attackInterval = 0.7f;
-			break;
-		}
-
-		++zombieCnt;
-		return zombie;
+	case Zombie::Types::Bloater:
+		zombie->textureId = "graphics/bloater.png";
+		zombie->maxHp = 40;
+		zombie->speed = 100;
+		zombie->damage = 60;
+		zombie->attackInterval = 1.f;
+		break;
+	case Zombie::Types::Chaser:
+		zombie->textureId = "graphics/chaser.png";
+		zombie->maxHp = 70;
+		zombie->speed = 75;
+		zombie->damage = 90;
+		zombie->attackInterval = 1.5f;
+		break;
+	case Zombie::Types::Crawler:
+		zombie->textureId = "graphics/crawler.png";
+		zombie->maxHp = 20;
+		zombie->speed = 50;
+		zombie->damage = 45;
+		zombie->attackInterval = 0.7f;
+		break;
 	}
-	return nullptr;
+
+	return zombie;
 }
 
 Zombie::Zombie(const std::string& name)

@@ -2,8 +2,6 @@
 #include "Gun.h"
 #include "SceneGame.h"
 
-int Gun::gunCount = 0;
-
 Gun::Gun(const std::string& name)
 	: GameObject(name)
 {
@@ -13,18 +11,17 @@ void Gun::Init()
 {
 	GameObject::Init();
 
-	time = 0.f;
-	availShoot = true;
-	gunCapacity = 6;	// 전체 총알 수 
-	currentGunCapacity = 6;
-	gunAmmo = 6;		// 한 탄창
-	currentAmmo = 6; // 내 현재 탄창
+	//fireTimer = 0.f;
+	//reloadTimer = 0.f;
+	//availShoot = true;
+	//gunCapacity = 6;	// 전체 총알 수 
+	//currentGunCapacity = 6;
+	//gunAmmo = 6;		// 한 탄창
+	//currentGunAmmo = 6; // 내 현재 탄창
 
-	gunDelay = 2.f;
-	reloadDelay = 0.8f;
-	isReload = false;
-
-
+	//gunDelay = 2.f;
+	//reloadDelay = 0.8f;
+	//isReload = false;
 }
 
 void Gun::Release()
@@ -35,17 +32,17 @@ void Gun::Release()
 void Gun::Reset()
 {
 	GameObject::Reset();
-	time = 0.f;
-	availShoot = true;
-	gunCapacity = 6;	// 전체 총알 수 
-	currentGunCapacity = 6;
-	gunAmmo = 6;		// 한 탄창
-	currentAmmo = 6; // 내 현재 탄창
+	//reloadTimer = 0.f;
+	//fireTimer = 0.f;
+	//availShoot = true;
+	//gunCapacity = 6;	// 전체 총알 수 
+	//currentGunCapacity = 6;
+	//gunAmmo = 6;		// 한 탄창
+	//currentGunAmmo = 6; // 내 현재 탄창
 
-
-	gunDelay = 2.f;
-	reloadDelay = 0.8f;
-	isReload = false;
+	//gunDelay = 2.f;
+	//reloadDelay = 0.8f;
+	//isReload = false;
 
 	sceneGame = dynamic_cast<SceneGame*>(SCENE_MANAGER.GetCurrentScene());
 	player = dynamic_cast<Player*>(SCENE_MANAGER.GetCurrentScene()->FindGameObject("player"));
@@ -54,19 +51,32 @@ void Gun::Reset()
 void Gun::Update(float dt)
 {
 	GameObject::Update(dt);
-	time += dt;
+	reloadTimer += dt;
 
 	if (InputManager::GetKeyDown(sf::Keyboard::R))
 	{
-		time = 0;
+		reloadTimer = 0;
 		isReload = true;
 	}
 
-	if (isReload && time > reloadDelay)
+	if (isReload && reloadTimer > reloadDelay)
 	{
 		Reload();
 		isReload = false;
 	}
+
+	if (!availShoot)
+	{
+		fireTimer += dt;
+		if (fireTimer > gunDelay)
+		{
+			availShoot = true;
+		}
+	}
+
+	std::cout << "전체 탄의 수 : " << currentGunCapacity << std::endl;
+	std::cout << "내 현재 탄창 : " << currentGunAmmo << std::endl;
+	std::cout << "재발사 시간  : " << gunDelay << std::endl;
 }
 
 void Gun::Draw(sf::RenderWindow& window)
@@ -76,12 +86,7 @@ void Gun::Draw(sf::RenderWindow& window)
 
 void Gun::Fire()
 {
-	if (time > gunDelay)
-	{
-		availShoot = true;
-	}
-
-	if (availShoot && currentAmmo > 0)
+	if (availShoot && currentGunAmmo > 0 && !isReload)
 	{
 		Bullet* bullet = new Bullet("bullet");
 		bullet->Init();
@@ -90,20 +95,26 @@ void Gun::Fire()
 		sceneGame->AddGameObject(bullet);
 
 		availShoot = false;
-		--currentAmmo;
-		time = 0;
+		--currentGunAmmo;
+		fireTimer = 0;
 	}
 }
 
 void Gun::Reload()
 {
 	// 로직 수정 필요
-	if (currentGunCapacity > 0) // gunCapacity를 수정하면 안 됨
+	if (currentGunCapacity > 0)
 	{
-		currentGunCapacity += currentAmmo;
+		currentGunCapacity += currentGunAmmo;
 
-		currentAmmo = gunAmmo;
-
-		currentGunCapacity -= gunAmmo;
+		if (currentGunCapacity >= gunAmmo)
+		{
+			currentGunCapacity -= gunAmmo;
+			currentGunAmmo = gunAmmo;
+		}
+		else
+		{
+			currentGunAmmo += currentGunCapacity;
+		}
 	}
 }

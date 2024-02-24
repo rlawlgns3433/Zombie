@@ -17,22 +17,20 @@ protected:
 	SceneGame* sceneGame = nullptr;
 	Player* player = nullptr;
 
-	float time = 0.f;
+	float reloadTimer = 0.f;
+	float fireTimer = 0.f;
 	bool availShoot = true;
 
-public:
-	static int gunCount;
-
-	unsigned gunCapacity = 6;	// ÀüÃ¼ ÃÑ¾Ë ¼ö 
-	unsigned currentGunCapacity = 6;
-	unsigned gunAmmo = 6;		// ÇÑ ÅºÃ¢
-	unsigned currentAmmo = 6; // ³» ÇöÀç ÅºÃ¢
-
+	int currentGunCapacity = 6; // ÀüÃ¼ ÅºÀÇ ¼ö
+	int gunAmmo = 6;		// ÇÑ ÅºÃ¢
+	int currentGunAmmo = 6; // ³» ÇöÀç ÅºÃ¢
 
 	float gunDelay = 2.f;
 	float reloadDelay = 0.8f;
+
 	bool isReload = false;
 
+public:
 	Gun(const std::string& name = "");
 	~Gun() override				= default;
 
@@ -44,4 +42,19 @@ public:
 
 	void Fire();
 	void Reload();
+
+
+	int GetCurrentGunCapacity() const { return this->currentGunCapacity; }
+	void AddCurrentGunCapacity(int add) { this->currentGunCapacity += add; }
+	void SetCurrentGunCapacity(int currentGunCapacity) { this->currentGunCapacity = currentGunCapacity; }
+
+	int GetGunAmmo() const { return this->gunAmmo; }
+	void AddGunAmmo(int add) { this->gunAmmo += add; }
+	void SetGunAmmo(int ammo) { this->gunAmmo = ammo; }
+
+	int GetCurrentGunAmmo() const { return this->currentGunAmmo; }
+	void SetCurrentGunAmmo(int ammo) { this->currentGunAmmo = ammo; }
+
+	float GetGunDelay() const { return this->gunDelay; }
+	void SetGunDelay(float delay) { this->gunDelay = delay; }
 };

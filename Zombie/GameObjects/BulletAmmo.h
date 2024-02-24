@@ -15,7 +15,6 @@ protected :
 
 	Gun* gun = nullptr;
 
-
 public :
 	static unsigned amount; // Gun Class 필요 Gun의 Fire() 호출 시 Bullet 생성
 	static BulletAmmo* Create(ItemType BulletType = ItemType::None);

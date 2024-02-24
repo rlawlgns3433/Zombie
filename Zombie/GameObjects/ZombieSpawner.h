@@ -30,6 +30,8 @@ protected :
 	float radius = 250.f;			// 생성 반경
 
 public :
+	static int zombieCount;
+
 	ZombieSpawner(const std::string& name = "");
 	~ZombieSpawner() override					   = default;
 

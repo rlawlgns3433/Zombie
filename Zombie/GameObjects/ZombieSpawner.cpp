@@ -2,6 +2,8 @@
 #include "ZombieSpawner.h"
 #include "SceneGame.h"
 
+int ZombieSpawner::zombieCount = 0;
+
 ZombieSpawner::ZombieSpawner(const std::string& name)
 	: GameObject(name)
 {
@@ -31,8 +33,9 @@ void ZombieSpawner::Reset()
 
 	timer = 0.f;
 	interval = 1.f;
-	spawnCount = 2;
+	spawnCount = 1;
 	radius = 250.f;
+	zombieCount = 0;
 
 	sceneGame = dynamic_cast<SceneGame*>(SCENE_MANAGER.GetCurrentScene());
 }
@@ -51,7 +54,7 @@ void ZombieSpawner::Update(float dt)
 			Zombie::Types zombieType = zombieTypes[Utils::Random::RandomRange(0, zombieTypes.size())];
 
 			Zombie* zombie = Zombie::Create(zombieType);
-			if (zombie != nullptr)
+			if (zombie != nullptr && zombieCount < 10)
 			{
 				zombie->Init();
 				zombie->Reset();
@@ -61,9 +64,9 @@ void ZombieSpawner::Update(float dt)
 				{
 					zombiePosition = sceneGame->ClampByTilemap(zombiePosition);
 				}
+				++zombieCount;
 
 				zombie->SetPosition(zombiePosition);
-
 				SCENE_MANAGER.GetCurrentScene()->AddGameObject(zombie);
 			}
 		}
