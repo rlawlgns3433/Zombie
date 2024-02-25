@@ -25,6 +25,8 @@ protected :
 	CrossHair* crossHair = nullptr;
 	HealthBar* healthBar = nullptr;
 
+	sf::Sound sound;
+
 	sf::Vector2f direction = { 0.f ,0.f };
 	sf::Vector2f look = { 1.f, 0.f };
 	
@@ -33,7 +35,6 @@ protected :
 	float speed = 300.f;
 	bool isMoving = false;
 
-public :
 	// protected로 변환 필요
 	float maxHp = 400.f;
 	float hp = 400.f;
@@ -42,6 +43,9 @@ public :
 	bool isInvincible = false;
 	bool isDead = false;
 	float time = 0.f;
+
+public :
+
 
 	Player(const std::string & name = "");
 	~Player() override = default;
@@ -60,6 +64,14 @@ public :
 
 	void SetInvincible(bool invincible) { this->isInvincible = invincible; }
 	bool GetInvincible() const { return this->isInvincible; }
+
+	float GetHp() const { return this->hp; }
+	void SetHp(float hp) { this->hp = hp; }
+	void AddHp(float add) { this->hp += add; }
+
+	float GetMaxHp() const { return this->maxHp;}
+	void SetMaxHp(float maxHp) { this->maxHp = maxHp; }
+	void AddMaxHp(float add) { this->maxHp += add; }
 
 	void OnDamage(int damage);
 	void OnDie();

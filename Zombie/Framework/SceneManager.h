@@ -30,7 +30,7 @@ protected:
 
 	std::vector<std::string> TextureResourceNames = { };
 	std::vector<std::string> FontResourceNames = { "fonts/DS-DIGI.ttf" };
-	std::vector<std::string> SoundResourceNames = {};
+	std::vector<std::string> SoundResourceNames = { "sound/hit.wav", "sound/pickup.wav", "sound/reload.wav" , "sound/reload.wav", "sound/reload_failed.wav", "sound/shoot.wav" ,"sound/splat.wav" };
 
 	unsigned lives = 3;
 	unsigned score = 0;

@@ -5,10 +5,10 @@ namespace Utils
 {
 	bool Sort::sortGameObject(GameObject* obj1, GameObject* obj2)
 	{
-		if (obj1->sortLayer != obj2->sortLayer)
+		if (obj1->GetSortLayer() != obj2->GetSortLayer())
 		{
-			return obj1->sortLayer < obj2->sortLayer;
+			return obj1->GetSortLayer() < obj2->GetSortLayer();
 		}
-		return obj1->sortOrder < obj2->sortOrder;
+		return obj1->GetSortOrder() < obj2->GetSortOrder();
 	}
 }

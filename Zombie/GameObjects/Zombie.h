@@ -34,6 +34,8 @@ protected :
 	Player* player = nullptr;
 	Types type = Types::None;
 
+	sf::Sound sound;
+
 	sf::Vector2f look = { 1.f, 0.f };
 
 	bool isDead = false;

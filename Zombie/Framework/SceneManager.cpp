@@ -39,7 +39,7 @@ void SceneManager::Release()
 
 void SceneManager::LoadAllResources()
 {
-	
+	 
 	for (const auto& name : TextureResourceNames)
 	{
 		TEXTURE_MANAGER.Load(name);

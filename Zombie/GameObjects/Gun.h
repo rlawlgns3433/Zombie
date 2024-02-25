@@ -16,6 +16,7 @@ protected:
 
 	SceneGame* sceneGame = nullptr;
 	Player* player = nullptr;
+	sf::Sound sound;
 
 	float reloadTimer = 0.f;
 	float fireTimer = 0.f;
@@ -25,7 +26,7 @@ protected:
 	int gunAmmo = 6;		// ÇÑ ÅºÃ¢
 	int currentGunAmmo = 6; // ³» ÇöÀç ÅºÃ¢
 
-	float gunDelay = 2.f;
+	float gunDelay = 0.6f;
 	float reloadDelay = 0.8f;
 
 	bool isReload = false;
@@ -33,7 +34,7 @@ protected:
 public:
 	Gun(const std::string& name = "");
 	~Gun() override				= default;
-
+	                                                                            
 	void Init() override;
 	void Release() override;
 	void Reset() override;

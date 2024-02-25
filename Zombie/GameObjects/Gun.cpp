@@ -50,10 +50,6 @@ void Gun::Update(float dt)
 			availShoot = true;
 		}
 	}
-
-	std::cout << "전체 탄의 수 : " << currentGunCapacity << std::endl;
-	std::cout << "내 현재 탄창 : " << currentGunAmmo << std::endl;
-	std::cout << "재발사 시간  : " << gunDelay << std::endl;
 }
 
 void Gun::Draw(sf::RenderWindow& window)
@@ -71,6 +67,10 @@ void Gun::Fire()
 		bullet->SetDirection(SCENE_MANAGER.GetCurrentScene()->ScreenToWorld((sf::Vector2i)(InputManager::GetMousePos() - player->GetPosition())));
 		sceneGame->AddGameObject(bullet);
 
+		sound.resetBuffer();
+		sound.setBuffer(*SOUND_MANAGER.GetResource("sound/shoot.wav"));
+		sound.play();
+
 		availShoot = false;
 		--currentGunAmmo;
 		fireTimer = 0;
@@ -79,7 +79,6 @@ void Gun::Fire()
 
 void Gun::Reload()
 {
-	// 로직 수정 필요
 	if (currentGunCapacity > 0)
 	{
 		currentGunCapacity += currentGunAmmo;
@@ -92,6 +91,11 @@ void Gun::Reload()
 		else
 		{
 			currentGunAmmo += currentGunCapacity;
+			currentGunCapacity = 0;
 		}
+
+		sound.resetBuffer();
+		sound.setBuffer(*SOUND_MANAGER.GetResource("sound/reload.wav"));
+		sound.play();
 	}
 }

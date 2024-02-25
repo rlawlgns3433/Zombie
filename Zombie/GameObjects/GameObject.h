@@ -20,10 +20,10 @@ protected :
 	bool isFlipX = false;
 	bool isFlipY = false;
 
-public :
 	int sortLayer = 0; // 다른 레이어 간 순서
 	int sortOrder = 0; // 동일 레이어 간 순서
 
+public :
 	static bool CompareDrawOrder(const GameObject& lhs, const GameObject& rhs);
 	static bool CompareDrawOrder(const GameObject* lhs, const GameObject* rhs);
 

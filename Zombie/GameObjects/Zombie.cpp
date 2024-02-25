@@ -70,8 +70,6 @@ void Zombie::Update(float dt)
 {
 	SpriteGo::Update(dt);
 
-	int bulletSize = SCENE_MANAGER.GetCurrentScene()->FindAll("bullet", bullets, Layers::World);
-
 	if (isDead) return;
 
 	look = player->GetPosition() - position;
@@ -99,6 +97,13 @@ void Zombie::FixedUpdate(float dt)
 			player->OnDamage(damage);
 			player->SetInvincible(true);
 			attackTimer = 0.f;
+
+			if (!isDead)
+			{
+				sound.resetBuffer();
+				sound.setBuffer(*SOUND_MANAGER.GetResource("sound/splat.wav"));
+				sound.play();
+			}
 		}
 	}
 }

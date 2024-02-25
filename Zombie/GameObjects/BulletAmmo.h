@@ -14,6 +14,7 @@ protected :
 	BulletAmmo& operator=(BulletAmmo&&)			= delete;
 
 	Gun* gun = nullptr;
+	sf::Sound sound;
 
 public :
 	static unsigned amount; // Gun Class 필요 Gun의 Fire() 호출 시 Bullet 생성
@@ -28,4 +29,3 @@ public :
 	void Update(float dt) override;
 	void Draw(sf::RenderWindow& window) override;
 };
-

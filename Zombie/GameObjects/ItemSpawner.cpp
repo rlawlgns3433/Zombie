@@ -58,8 +58,9 @@ void ItemSpawner::Update(float dt)
 				item->Init();
 				item->Reset();
 				item->SetPosition(itemPosition);
-
 				SCENE_MANAGER.GetCurrentScene()->AddGameObject(item);
+				SetSortLayer(1);
+				sceneGame->ResortGameObject(item);
 			}
 			else if (itemType == ItemType::Bullet) 
 			{
@@ -67,8 +68,9 @@ void ItemSpawner::Update(float dt)
 				item->Init();
 				item->Reset();
 				item->SetPosition(itemPosition);
-
 				SCENE_MANAGER.GetCurrentScene()->AddGameObject(item);
+				SetSortLayer(1);
+				sceneGame->ResortGameObject(item);
 			}
 		}
 	}

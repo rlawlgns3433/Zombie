@@ -22,6 +22,7 @@ protected :
 
 	CrossHair* crossHair = nullptr;
 	sf::CircleShape shape;
+	sf::Sound sound;
 
 	float speed = 1000.f;
 	float damage = 100.f;

@@ -11,7 +11,6 @@ HealthBox* HealthBox::Create(ItemType BulletType)
 	HealthBox* healthBox = new HealthBox("healthbox");
 	healthBox->type = BulletType;
 	healthBox->textureId = "graphics/health_pickup.png";
-	healthBox->amount = 40.f;
 
 	return healthBox;
 }
@@ -46,16 +45,20 @@ void HealthBox::Update(float dt)
 {
 	Item::Update(dt);
 
-	if (Utils::MyMath::Distance(position, player->GetPosition()) < 50.f)
+	if (GetGlobalBounds().intersects(player->GetGlobalBounds()))
 	{
 		SCENE_MANAGER.GetCurrentScene()->RemoveGameObject(this);
 
-		player->hp += amount * 4;
-		if (player->hp > player->maxHp)
+		player->AddHp(amount * 4);
+		if (player->GetHp() > player->GetMaxHp())
 		{
-			player->hp = player->maxHp;
+			player->SetHp(player->GetMaxHp());
 		}
-		healthBar->SetRectSize({ player->hp, healthBar->GetCurrentRectSize().y });
+		healthBar->SetRectSize({ player->GetHp(), healthBar->GetCurrentRectSize().y});
+
+		sound.resetBuffer();
+		sound.setBuffer(*SOUND_MANAGER.GetResource("sound/pickup.wav"));
+		sound.play();
 	}
 }
 

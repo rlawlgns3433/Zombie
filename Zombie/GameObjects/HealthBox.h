@@ -15,6 +15,8 @@ protected:
 
 	HealthBar* healthBar = nullptr;
 
+	sf::Sound sound;
+
 public:
 	static unsigned amount;
 	static int healthboxCnt;

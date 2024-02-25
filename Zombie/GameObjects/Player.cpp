@@ -111,7 +111,6 @@ void Player::LateUpdate(float dt)
 void Player::FixedUpdate(float dt)
 {
 
-
 }
 
 void Player::Draw(sf::RenderWindow& window)

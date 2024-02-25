@@ -72,7 +72,7 @@ void SceneSkillUp::Update(float dt)
 	if (InputManager::GetKeyDown(sf::Keyboard::Num1) || InputManager::GetKeyDown(sf::Keyboard::Numpad1))
 	{
 		gun->SetGunDelay(gun->GetGunDelay() - 0.2f);
-		if (gun->GetGunDelay() <= 0)
+		if (gun->GetGunDelay() <= 0.1)
 		{
 			gun->SetGunDelay(0.2f);
 		}
@@ -92,7 +92,7 @@ void SceneSkillUp::Update(float dt)
 	}
 	else if (InputManager::GetKeyDown(sf::Keyboard::Num3) || InputManager::GetKeyDown(sf::Keyboard::Numpad3))
 	{
-		player->maxHp += 40;
+		player->AddMaxHp(40);
 		SCENE_MANAGER.ChangeScene(SceneIDs::SceneGame);
 		SCENE_MANAGER.GetScene(SceneIDs::SceneGame)->SetStatus(GameStatus::Game);
 		time = 0;

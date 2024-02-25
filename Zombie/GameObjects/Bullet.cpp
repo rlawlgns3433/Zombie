@@ -63,6 +63,10 @@ void Bullet::FixedUpdate(float dt)
             if (zombie != nullptr)
             {
                 zombie->OnDamage(damage);
+                
+                sound.resetBuffer();
+                sound.setBuffer(*SOUND_MANAGER.GetResource("sound/hit.wav"));
+                sound.play();
             }
             break;
         }

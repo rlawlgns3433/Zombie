@@ -47,7 +47,7 @@ void SceneGame::Init()
     AddGameObject(player);
 
     tilemap = new Tilemap("background");
-    tilemap->sortLayer = -1.f;
+    tilemap->SetSortLayer(-1);
     AddGameObject(tilemap);
 
     InitUI();
@@ -137,7 +137,7 @@ void SceneGame::Enter()
     tilemap->SetPosition( 0, 0);
     tilemap->SetOrigin(Origins::MC);
     player->SetPosition({ 0, 0 });
-    player->hp = player->maxHp;
+    player->SetHp(player->GetMaxHp());
     deadZombieCount = 0;
     gun = dynamic_cast<Gun*>(FindGameObject("gun"));
 }
@@ -208,12 +208,12 @@ void SceneGame::UpdateGame(float dt)
         status = GameStatus::Pause;
     }
 
-    if (player->hp <= 0)
+    if (player->GetHp() <= 0)
     {
         status = GameStatus::GameOver;
     }
 
-    if (zombieList.size() != 0 &&  GetZombieCount() - GetDeadZombieCount() <= 0)
+    if (zombieList.size() != 0 &&  GetZombieCount() - GetDeadZombieCount() <= 0 && zombieList.size() == wave * 5)
     {
         // 다음 웨이브 시작
         Reset();
