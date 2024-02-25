@@ -4,7 +4,6 @@
 
 Zombie* Zombie::Create(Types zombieType)
 {
-
 	Zombie* zombie = new Zombie("zombie");
 	zombie->type = zombieType;
 
@@ -130,8 +129,7 @@ void Zombie::OnDie()
 	damage = 0;
 	SetTexture("graphics/blood.png");
 	SetSortLayer(-1);
+	sceneGame->AddScore(10);
+	sceneGame->SetDeadZombieCount(sceneGame->GetDeadZombieCount() + 1);
 	SCENE_MANAGER.GetCurrentScene()->ResortGameObject(this);
-
-	//SetActive(false);
-	//sceneGame->RemoveGameObject(this); 씬 변경 시 처리
 }

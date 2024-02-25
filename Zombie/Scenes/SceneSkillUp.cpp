@@ -72,31 +72,37 @@ void SceneSkillUp::Update(float dt)
 	{
 		gun->SetGunDelay(gun->GetGunDelay() - 0.2f);
 		SCENE_MANAGER.ChangeScene(SceneIDs::SceneGame);
+		SCENE_MANAGER.GetScene(SceneIDs::SceneGame)->SetStatus(GameStatus::Game);
 	}
 	else if (InputManager::GetKeyDown(sf::Keyboard::Num2) || InputManager::GetKeyDown(sf::Keyboard::Numpad2))
 	{
 		gun->AddGunAmmo(6);
 		SCENE_MANAGER.ChangeScene(SceneIDs::SceneGame);
+		SCENE_MANAGER.GetScene(SceneIDs::SceneGame)->SetStatus(GameStatus::Game);
 	}
 	else if (InputManager::GetKeyDown(sf::Keyboard::Num3) || InputManager::GetKeyDown(sf::Keyboard::Numpad3))
 	{
 		player->maxHp += 40;
 		SCENE_MANAGER.ChangeScene(SceneIDs::SceneGame);
+		SCENE_MANAGER.GetScene(SceneIDs::SceneGame)->SetStatus(GameStatus::Game);
 	}
 	else if (InputManager::GetKeyDown(sf::Keyboard::Num4) || InputManager::GetKeyDown(sf::Keyboard::Numpad4))
 	{
 		player->AddSpeed(50);
 		SCENE_MANAGER.ChangeScene(SceneIDs::SceneGame);
+		SCENE_MANAGER.GetScene(SceneIDs::SceneGame)->SetStatus(GameStatus::Game);
 	}
 	else if (InputManager::GetKeyDown(sf::Keyboard::Num5) || InputManager::GetKeyDown(sf::Keyboard::Numpad5))
 	{
 		HealthBox::amount += 10;
 		SCENE_MANAGER.ChangeScene(SceneIDs::SceneGame);
+		SCENE_MANAGER.GetScene(SceneIDs::SceneGame)->SetStatus(GameStatus::Game);
 	}
 	else if (InputManager::GetKeyDown(sf::Keyboard::Num6) || InputManager::GetKeyDown(sf::Keyboard::Numpad6))
 	{
 		BulletAmmo::amount += 10;
 		SCENE_MANAGER.ChangeScene(SceneIDs::SceneGame);
+		SCENE_MANAGER.GetScene(SceneIDs::SceneGame)->SetStatus(GameStatus::Game);
 	}
 }
 

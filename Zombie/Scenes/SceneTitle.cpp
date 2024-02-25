@@ -25,7 +25,7 @@ void SceneTitle::Init()
 	textIntro->SetTextSize(70);
 	textIntro->SetScale({ 1.f, 1.5f });
 	textIntro->SetOrigin(Origins::MC);
-	textIntro->SetPosition(windowX * 0.2f, windowY * 0.8f);
+	textIntro->SetPosition(ScreenToUi({ (int)(windowX * 0.5f), (int)(windowY * 0.8f) }));
 	AddGameObject(textIntro, Layers::Ui);
 
 	textHighScore = new TextGo("highscore");
@@ -34,7 +34,8 @@ void SceneTitle::Init()
 	textHighScore->SetTextSize(30);
 	textHighScore->SetScale({ 1.f, 1.5f });
 	textHighScore->SetOrigin(Origins::TC);
-	textHighScore->SetPosition({ windowX * 0.4f, 0 });
+	textHighScore->SetPosition(ScreenToUi({ (int)(windowX * 0.7f), 0 }));
+
 	AddGameObject(textHighScore, Layers::Ui);
 
 	Scene::Init();

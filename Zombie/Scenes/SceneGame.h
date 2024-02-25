@@ -8,11 +8,11 @@ class Zombie;
 class TextGo;
 class HealthBar;
 class Tilemap;
-
+class Gun;
 
 class SceneGame : public Scene
 {
-protected :
+protected:
 	GameStatus status = GameStatus::Game;
 
 	std::vector<ZombieSpawner*> zombieSpawners;
@@ -24,6 +24,7 @@ protected :
 	Tilemap* tilemap = nullptr;
 
 	Player* player = nullptr;
+	Gun* gun = nullptr;
 	TextGo* textScore = nullptr;
 	TextGo* textHighScore = nullptr;
 	TextGo* textAmmos = nullptr;
@@ -35,31 +36,49 @@ protected :
 
 	float windowX = 0.f;
 	float windowY = 0.f;
-	unsigned wave = 1;
+	int wave = 1;
 
-public :
+	int score = 0;
+	int highScore = 0;
+
+	int deadZombieCount = 0;
+
+public:
 	SceneGame(SceneIDs id);
 	virtual ~SceneGame();
 
-	SceneGame(const SceneGame&)				= delete;
-	SceneGame(SceneGame&&)					= delete;
-	SceneGame& operator=(const SceneGame&)	= delete;
-	SceneGame& operator=(SceneGame&&)		= delete;
+	SceneGame(const SceneGame&) = delete;
+	SceneGame(SceneGame&&) = delete;
+	SceneGame& operator=(const SceneGame&) = delete;
+	SceneGame& operator=(SceneGame&&) = delete;
 
 	// SceneDev1을(를) 통해 상속됨 
 	void Init() override;
+	void InitUI();
 	void Release() override;
-	virtual void Reset();
+	void Reset();
 	void Enter() override;
 	void Exit() override;
 	void Update(float dt) override;
+	void UpdateUI(float dt);
 	void UpdateAwake(float dt);
 	void UpdateGame(float dt);
 	void UpdateGameover(float dt);
 	void UpdatePause(float dt);
 	void Draw(sf::RenderWindow& window);
 
-	unsigned GetWave() const { return wave; }
+	int GetScore() const { return this->score; }
+	void SetScore(int score) { this->score = score; }
+	void AddScore(int score) { this->score += score; }
+
+	int GetZombieCount() const { return zombieList.size(); }
+
+	int GetWave() const { return this->wave; }
+	void SetWave(int wave) { this->wave = wave; }
+
+	int GetDeadZombieCount() { return this->deadZombieCount; }
+	void SetDeadZombieCount(int count) { this->deadZombieCount = count; }
+
 	void LoadZombieList(Zombie* zombie);
 	sf::Vector2f ClampByTilemap(const sf::Vector2f& point);
 	bool IsInTilemap(const sf::Vector2f& point);

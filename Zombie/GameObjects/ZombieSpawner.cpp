@@ -54,7 +54,7 @@ void ZombieSpawner::Update(float dt)
 			Zombie::Types zombieType = zombieTypes[Utils::Random::RandomRange(0, zombieTypes.size())];
 
 			Zombie* zombie = Zombie::Create(zombieType);
-			if (zombie != nullptr && zombieCount < 10)
+			if (zombie != nullptr && zombieCount < sceneGame->GetWave() * 5)
 			{
 				zombie->Init();
 				zombie->Reset();

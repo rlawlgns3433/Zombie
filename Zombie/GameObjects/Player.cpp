@@ -25,7 +25,6 @@ void Player::Init()
 	healthBar->SetPosition({FRAMEWORK.GetWindowSize().x * 0.5f, FRAMEWORK.GetWindowSize().y * 0.9f });
 	healthBar->SetOrigin(Origins::MC);
 	SCENE_MANAGER.GetScene(SceneIDs::SceneGame)->AddGameObject(healthBar, Layers::Ui);
-
 }
 
 void Player::Release()

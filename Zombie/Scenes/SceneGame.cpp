@@ -8,6 +8,7 @@
 #include "CrossHair.h"
 #include "ItemSpawner.h"
 #include "HealthBar.h"
+#include "Gun.h"
 
 SceneGame::SceneGame(SceneIDs id) 
     : Scene(id)
@@ -49,23 +50,29 @@ void SceneGame::Init()
     tilemap->sortLayer = -1.f;
     AddGameObject(tilemap);
 
+    InitUI();
 
+    Scene::Init();
+}
+
+void SceneGame::InitUI()
+{
     textScore = new TextGo("score");
     textScore->Set(*FONT_MANAGER.GetResource("fonts/zombiecontrol.ttf"), "SCORE:", 30, sf::Color::White);
     textScore->SetScale({ 1.f, 1.5f });
-    textScore->SetPosition(0, 0);
+    textScore->SetPosition((sf::Vector2f)(WorldToScreen(ScreenToUi({ (int)(windowX * 0.05f), (int)(windowY * 0.f) }))));
     AddGameObject(textScore, Layers::Ui);
 
     textHighScore = new TextGo("hiscore");
     textHighScore->Set(*FONT_MANAGER.GetResource("fonts/zombiecontrol.ttf"), "HI SCORE:", 30, sf::Color::White);
     textHighScore->SetScale({ 1.f, 1.5f });
-    textHighScore->SetPosition(500, 0);
+    textHighScore->SetPosition((sf::Vector2f)(WorldToScreen(ScreenToUi({ (int)(windowX * 0.7f), (int)(windowY * 0.f) }))));
     AddGameObject(textHighScore, Layers::Ui);
-    
+
     textAmmos = new TextGo("ammos");
     textAmmos->Set(*FONT_MANAGER.GetResource("fonts/zombiecontrol.ttf"), "6/100", 30, sf::Color::White);
     textAmmos->SetScale({ 1.f, 1.5f });
-    textAmmos->SetPosition(100, 1000);
+    textAmmos->SetPosition((sf::Vector2f)(WorldToScreen(ScreenToUi({ (int)(windowX * 0.1f), (int)(windowY * 0.95f) }))));
     textAmmos->SetOrigin(Origins::BL);
     AddGameObject(textAmmos, Layers::Ui);
 
@@ -73,27 +80,24 @@ void SceneGame::Init()
     textWave->Set(*FONT_MANAGER.GetResource("fonts/zombiecontrol.ttf"), "WAVE:", 30, sf::Color::White);
     textWave->SetScale({ 1.f, 1.5f });
     textWave->SetPosition(1300, 1000);
-    textAmmos->SetOrigin(Origins::BL);
+    textWave->SetPosition((sf::Vector2f)(WorldToScreen(ScreenToUi({ (int)(windowX * 0.7f), (int)(windowY * 0.95f) }))));
+    textWave->SetOrigin(Origins::BL);
     AddGameObject(textWave, Layers::Ui);
 
     textZombieCount = new TextGo("wave");
     textZombieCount->Set(*FONT_MANAGER.GetResource("fonts/zombiecontrol.ttf"), "ZOMBIES:", 30, sf::Color::White);
     textZombieCount->SetScale({ 1.f, 1.5f });
-    textZombieCount->SetPosition(1600, 1000);
-    textAmmos->SetOrigin(Origins::BL);
+    textZombieCount->SetPosition((sf::Vector2f)(WorldToScreen(ScreenToUi({ (int)(windowX * 0.85f), (int)(windowY * 0.95f) }))));
+    textZombieCount->SetOrigin(Origins::BL);
     AddGameObject(textZombieCount, Layers::Ui);
 
     textGameover = new TextGo("gameover");
-    textGameover->Set(*FONT_MANAGER.GetResource("fonts/zombiecontrol.ttf"), "GameOver~ Try Again ^^", 30, sf::Color::White);
+    textGameover->Set(*FONT_MANAGER.GetResource("fonts/zombiecontrol.ttf"), "GameOver~ Try Again ^^", 60, sf::Color::White);
     textGameover->SetScale({ 1.f, 1.5f });
-    textGameover->SetPosition(windowX * 0.5f, windowY * 0.5f);
+    textGameover->SetPosition((sf::Vector2f)(WorldToScreen(ScreenToUi({ (int)(windowX * 0.5f), (int)(windowY * 0.5f) }))));
     textGameover->SetOrigin(Origins::MC);
     textGameover->SetActive(false);
     AddGameObject(textGameover, Layers::Ui);
-
-
-
-    Scene::Init(); // 모든 게임 오브젝트 Init()
 }
 
 void SceneGame::Release()
@@ -103,6 +107,20 @@ void SceneGame::Release()
 
 void SceneGame::Reset()
 {
+    for (GameObject* obj : zombieList)
+    {
+        RemoveGameObject(obj);
+    }
+
+    for (GameObject* obj : gameObjects)
+    {
+        if (obj->GetName() == "healthbox" || obj->GetName() == "ammoItem")
+        {
+            RemoveGameObject(obj);
+        }
+    }
+
+    SetDeadZombieCount(0);
 }
 
 void SceneGame::Enter()
@@ -119,6 +137,8 @@ void SceneGame::Enter()
     tilemap->SetOrigin(Origins::MC);
     player->SetPosition({ 0, 0 });
     player->hp = player->maxHp;
+    deadZombieCount = 0;
+    gun = dynamic_cast<Gun*>(FindGameObject("gun"));
 }
 
 void SceneGame::Exit()
@@ -126,24 +146,14 @@ void SceneGame::Exit()
     Scene::Exit();
 	FRAMEWORK.SetTimeScale(1.f);
 
-    for (GameObject* obj : zombieList)
-    {
-        RemoveGameObject(obj);
-    }
-
-    for (GameObject* obj : gameObjects)
-    {
-        if (obj->GetName() == "healthbox" || obj->GetName() == "ammoItem")
-        {
-            RemoveGameObject(obj);
-        }
-    }
+    Reset();
 }
 
 void SceneGame::Update(float dt)
 {
 
     Scene::Update(dt);
+    UpdateUI(dt);          
     SetStatus(status);
 
     switch (status)
@@ -165,12 +175,24 @@ void SceneGame::Update(float dt)
     }
 }
 
+void SceneGame::UpdateUI(float dt)
+{
+    textScore->SetText("SCORE : " + std::to_string(score));
+
+    highScore = score > highScore ? score : highScore;
+    textHighScore->SetText("HI SCORE : " + std::to_string(highScore));
+
+    textAmmos->SetText(std::to_string(gun->GetCurrentGunAmmo()) + "/" + std::to_string(gun->GetCurrentGunCapacity()));
+    textWave->SetText("WAVE : " + std::to_string(wave));
+    textZombieCount->SetText("ZOMBIE : " + std::to_string(GetZombieCount() - GetDeadZombieCount()));
+
+}
+
 void SceneGame::UpdateAwake(float dt)
 {
     if (InputManager::GetKeyDown(sf::Keyboard::Enter))
     {
         status = GameStatus::Game;
-        Reset();
     }
 }
 
@@ -188,6 +210,18 @@ void SceneGame::UpdateGame(float dt)
     if (player->hp <= 0)
     {
         status = GameStatus::GameOver;
+    }
+
+    if (zombieList.size() != 0 &&  GetZombieCount() - GetDeadZombieCount() <= 0)
+    {
+        // 다음 웨이브 시작
+        Reset();
+        wave++;
+        
+        for (ZombieSpawner* spawner : zombieSpawners)
+        {
+            spawner->Reset();
+        }
     }
 }
 
@@ -235,7 +269,6 @@ bool SceneGame::IsInTilemap(const sf::Vector2f& point)
 {
     sf::FloatRect rect = tilemap->GetGlobalBounds();
     rect = Utils::MyMath::ResizeRect(rect, tilemap->GetCellSize() * -2.f);
-    // 사각형 영역
 
     return rect.contains(point);
 }

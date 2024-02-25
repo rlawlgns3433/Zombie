@@ -3,9 +3,6 @@ class GameObject;
 
 class Scene
 {
-public :
-
-
 protected :
 	Scene(const Scene&)				= delete;
 	Scene(Scene&&)					= delete;
@@ -15,9 +12,7 @@ protected :
 	SceneIDs id;
 	std::unordered_map<size_t, std::vector<GameObject*>> gameObjectsMap;
 
-	//std::vector<std::list<GameObject*>> gameObjects; // gameObjects[0], gameObjects[1]
-	//std::priority_queue<GameObject*,std::vector<GameObject*>, Utils::Sort::sortGam> gameObjects; // !!!PQ로 바꿔보기!!!
-	std::list<GameObject*> gameObjects; // 활성화 된 GameObjects
+	std::list<GameObject*> gameObjects;
 	std::list<GameObject*> uiGameObjects;
 
 	std::list<GameObject*> resortingGameObjects;
@@ -30,7 +25,7 @@ protected :
 	ResourceManager<sf::Font>& fontManager;
 	ResourceManager<sf::SoundBuffer>& soundManager;
 
-	GameStatus status = GameStatus::Game; // 변경 필요
+	GameStatus status = GameStatus::Game;
 
 public :
 	Scene(SceneIDs id);
