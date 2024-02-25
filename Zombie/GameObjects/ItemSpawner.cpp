@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "ItemSpawner.h"
+#include "SceneGame.h"
 
 ItemSpawner::ItemSpawner(const std::string& name)
 	: GameObject(name)
@@ -20,6 +21,8 @@ void ItemSpawner::Reset()
 {
 	GameObject::Reset();
 
+	sceneGame = dynamic_cast<SceneGame*>(SCENE_MANAGER.GetCurrentScene());
+
 	itemTypes.clear();
 	itemTypes.push_back(ItemType::None);
 	itemTypes.push_back(ItemType::HealthBox);
@@ -29,9 +32,9 @@ void ItemSpawner::Reset()
 	itemTypes.push_back(ItemType::Bullet);
 
 	timer = 0.f;
-	interval = 2.f;
+	interval = 5.f;
 	spawnCount = 1;
-	radius = 300.f;
+	radius = 250.f * sceneGame->GetWave();
 }
 
 void ItemSpawner::Update(float dt)

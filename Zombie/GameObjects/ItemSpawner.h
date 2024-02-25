@@ -12,6 +12,7 @@ protected :
 	ItemSpawner& operator=(ItemSpawner&&)	   = delete;
 
 	std::vector<ItemType> itemTypes;
+	SceneGame* sceneGame = nullptr;
 
 	float timer = 0.f;
 

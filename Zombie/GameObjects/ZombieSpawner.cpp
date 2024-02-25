@@ -22,6 +22,7 @@ void ZombieSpawner::Release()
 void ZombieSpawner::Reset()
 {
 	GameObject::Reset();
+	sceneGame = dynamic_cast<SceneGame*>(SCENE_MANAGER.GetCurrentScene());
 
 	zombieTypes.clear();
 	zombieTypes.push_back(Zombie::Types::Bloater);
@@ -34,10 +35,9 @@ void ZombieSpawner::Reset()
 	timer = 0.f;
 	interval = 1.f;
 	spawnCount = 1;
-	radius = 250.f;
+	radius = 250.f * sceneGame->GetWave();
 	zombieCount = 0;
 
-	sceneGame = dynamic_cast<SceneGame*>(SCENE_MANAGER.GetCurrentScene());
 }
 
 void ZombieSpawner::Update(float dt)

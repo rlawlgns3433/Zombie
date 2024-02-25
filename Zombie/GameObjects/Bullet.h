@@ -24,10 +24,10 @@ protected :
 	sf::CircleShape shape;
 
 	float speed = 1000.f;
-	float damage = 30.f;
+	float damage = 100.f;
+	sf::Vector2f direction{ 1.f, 0.f };
 
 public:
-	sf::Vector2f direction{ 1.f, 0.f };
 	Bullet(const std::string& name = "");
 	~Bullet() override					= default;
 
@@ -42,4 +42,5 @@ public:
 	sf::FloatRect GetGlobalBounds() override { return shape.getGlobalBounds(); }
 
 	sf::Vector2f GetPosition() const { return shape.getPosition(); }
+	void SetDirection(const sf::Vector2f direction) { this->direction = direction; }
 };

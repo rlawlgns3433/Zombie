@@ -111,6 +111,7 @@ void SceneGame::Reset()
     {
         RemoveGameObject(obj);
     }
+    zombieList.clear();
 
     for (GameObject* obj : gameObjects)
     {
@@ -217,11 +218,16 @@ void SceneGame::UpdateGame(float dt)
         // 다음 웨이브 시작
         Reset();
         wave++;
-        
+        tilemap->Set({ wave * 15, wave * 15 }, { 50, 50 });
+        tilemap->SetSortLayer(-1);
+        ResortGameObject(tilemap);
+
         for (ZombieSpawner* spawner : zombieSpawners)
         {
             spawner->Reset();
         }
+
+        SCENE_MANAGER.ChangeScene(SceneIDs::SceneSkillUp);
     }
 }
 
